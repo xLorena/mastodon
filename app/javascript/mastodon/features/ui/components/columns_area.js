@@ -226,7 +226,24 @@ class ColumnsArea extends ImmutablePureComponent {
         <div key='content' className='columns-area columns-area--mobile'>{children}</div>
       );
 
-      return (
+      const currentPath = this.context.router.history.location.pathname;
+
+      if(currentPath === '/newsfeed-compare' || currentPath === '/polarization' || currentPath === '/awareness' ){
+        return (  <div className='columns-area__panels' style={{ justifyContent: 'space-between', width: 'unset', marginRight: '5vw' }}>
+          <div className='columns-area__panels__main' style={{ maxWidth:'unset', flex:'unset' }}>
+            <TabsBar key='tabs' />
+            {content}
+          </div>
+
+          <div className='columns-area__panels__pane columns-area__panels__pane--start columns-area__panels__pane--navigational'>
+            <div className='columns-area__panels__pane__inner'>
+              <NavigationPanel showLabelOnHover={false} />
+            </div>
+          </div>
+
+          {floatingActionButton}
+        </div>);
+      } else  return (
         <div className='columns-area__panels'>
           <div className='columns-area__panels__pane columns-area__panels__pane--compositional'>
             <div className='columns-area__panels__pane__inner'>
@@ -241,7 +258,7 @@ class ColumnsArea extends ImmutablePureComponent {
 
           <div className='columns-area__panels__pane columns-area__panels__pane--start columns-area__panels__pane--navigational'>
             <div className='columns-area__panels__pane__inner'>
-              <NavigationPanel />
+              <NavigationPanel showLabelOnHover={false} />
             </div>
           </div>
 
