@@ -61,6 +61,11 @@ const makeMapStateToProps = () => {
   const mapStateToProps = (state, props) => ({
     status: getStatus(state, props),
     pictureInPicture: getPictureInPicture(state, props),
+    insideBubble: state.getIn(['settings', 'personalization', 'insideBubble']),
+    outsideBubble: state.getIn(['settings', 'personalization', 'outsideBubble']),
+    algorithm: state.getIn(['settings', 'algorithm']),
+    favourites: state.getIn(['status_lists', 'favourites', 'items']),
+    statuses: state.get('statuses'),
   });
 
   return mapStateToProps;
@@ -219,6 +224,10 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
   deployPictureInPicture (status, type, mediaProps) {
     dispatch(deployPictureInPicture(status.get('id'), status.getIn(['account', 'id']), type, mediaProps));
   },
+
+  // fetchFavouritedStatuses() {
+  //   dispatch(fetchFavouritedStatuses());
+  // },
 
 });
 
