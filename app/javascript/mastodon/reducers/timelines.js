@@ -40,6 +40,8 @@ const expandNormalizedTimeline = (state, timeline, statuses, next, isPartial, is
 
     if (timeline.endsWith(':pinned')) {
       mMap.set('items', statuses.map(status => status.get('id')));
+    } else if(timeline === 'diverse') {
+      mMap.set('items', statuses.sort((a, b) => a.get('sentiment_score') - b.get('sentiment_score')).map(status => status.get('id')));
     } else if (!statuses.isEmpty()) {
       usePendingItems = isLoadingRecent && (usePendingItems || !mMap.get('pendingItems').isEmpty());
 
@@ -59,6 +61,9 @@ const expandNormalizedTimeline = (state, timeline, statuses, next, isPartial, is
         );
       });
     }
+    // if (timeline === 'diverse'){
+    //   mMap.set('items', statuses.map(status => status.get('id')).sort());
+    // }
   }));
 };
 
