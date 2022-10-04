@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import ColumnSettings from '../components/column_settings';
 import { changeSetting } from '../../../actions/settings';
 import { changeColumnParams } from '../../../actions/columns';
+import { openModal } from 'mastodon/actions/modal';
 
 const mapStateToProps = (state, { columnId }) => {
   const uuid = columnId;
@@ -10,6 +11,7 @@ const mapStateToProps = (state, { columnId }) => {
 
   return {
     settings: (uuid && index >= 0) ? columns.get(index).get('params') : state.getIn(['settings', 'community']),
+    selectedAlgorithm: state.getIn(['settings', 'algorithm']),
   };
 };
 
@@ -21,6 +23,17 @@ const mapDispatchToProps = (dispatch, { columnId }) => {
       } else {
         dispatch(changeSetting(['community', ...key], checked));
       }
+    },
+    onAlgorithmChange(value) {
+      dispatch(changeSetting(['algorithm'], value));
+    },
+    onItemClick () {
+      dispatch(openModal('CONFIRM', {
+        message: 'Benutzerdefinierte Personalisierung',
+        showBubbleComponent: true,
+        confirm: 'Speichern',
+        onConfirm: () => console.log('hallo'),
+      }));
     },
   };
 };
