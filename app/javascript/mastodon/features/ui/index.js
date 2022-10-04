@@ -35,11 +35,11 @@ import {
   Status,
   GettingStarted,
   KeyboardShortcuts,
-  PublicTimeline,
+  //PublicTimeline,
   CommunityTimeline,
   AccountTimeline,
   AccountGallery,
-  HomeTimeline,
+  //HomeTimeline,
   Followers,
   Following,
   Reblogs,
@@ -195,10 +195,10 @@ class SwitchingColumnsArea extends React.PureComponent {
 
           <WrappedRoute
             path={['/home', '/timelines/home']}
-            component={HomeTimeline}
+            component={CommunityTimeline}
             content={children}
           />
-          <WrappedRoute
+          {/* <WrappedRoute
             path={['/public', '/timelines/public']}
             exact
             component={PublicTimeline}
@@ -209,7 +209,7 @@ class SwitchingColumnsArea extends React.PureComponent {
             exact
             component={CommunityTimeline}
             content={children}
-          />
+          /> */}
           <WrappedRoute
             path={['/conversations', '/timelines/direct']}
             component={DirectTimeline}
