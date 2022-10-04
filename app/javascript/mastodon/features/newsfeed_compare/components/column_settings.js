@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import SettingRadio from '../../notifications/components/setting_radio';
+import SettingRadio from './setting_radio';
 
 export default @injectIntl
 class ColumnSettings extends React.PureComponent {

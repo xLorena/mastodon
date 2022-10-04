@@ -189,7 +189,7 @@ export default function settings(state = initialState, action) {
       .set('saved', false);
   case SETTING_NEWSFEED_COMPARE_REMOVE:
     return state
-      .update('newsfeedCompare', action.path, (list) =>
+      .update('newsfeedCompare', (list) =>
         list.delete(list.indexOf(action.value)),
       )
       .set('saved', false);

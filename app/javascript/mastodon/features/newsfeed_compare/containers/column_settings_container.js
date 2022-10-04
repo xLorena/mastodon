@@ -23,10 +23,16 @@ const mapDispatchToProps = (dispatch, { columnId }) => {
         dispatch(changeSetting(['community', ...key], checked));
       }
     },
-    onNewsfeedCompareChange (key, checked){
-      console.log(key, checked);
-      // if(!checked) dispatch(removeFromSettingNewsfeedCompare(key));
-      // else dispatch(addToSettingNewsfeedCompare(key));
+    onNewsfeedCompareChange(key, settings){
+      //console.log(key, settings);
+      if(settings.includes(key)) {
+        dispatch(removeFromSettingNewsfeedCompare(key));
+      } else{
+        if(settings.size === 3){
+          dispatch(removeFromSettingNewsfeedCompare(settings.last()));
+        }
+        dispatch(addToSettingNewsfeedCompare(key));
+      }
     },
   };
 };
