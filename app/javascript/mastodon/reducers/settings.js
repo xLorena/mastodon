@@ -1,16 +1,38 @@
-import { SETTING_CHANGE, SETTING_SAVE } from '../actions/settings';
+import {
+  SETTING_CHANGE,
+  SETTING_SAVE,
+  SETTING_BUBBLE_LIST_ADD,
+  SETTING_BUBBLE_LIST_REMOVE,
+  SETTING_NEWSFEED_COMPARE_ADD,
+  SETTING_NEWSFEED_COMPARE_REMOVE,
+} from '../actions/settings';
 import { NOTIFICATIONS_FILTER_SET } from '../actions/notifications';
-import { COLUMN_ADD, COLUMN_REMOVE, COLUMN_MOVE, COLUMN_PARAMS_CHANGE } from '../actions/columns';
+import {
+  COLUMN_ADD,
+  COLUMN_REMOVE,
+  COLUMN_MOVE,
+  COLUMN_PARAMS_CHANGE,
+} from '../actions/columns';
 import { STORE_HYDRATE } from '../actions/store';
 import { EMOJI_USE } from '../actions/emojis';
 import { LIST_DELETE_SUCCESS, LIST_FETCH_FAIL } from '../actions/lists';
-import { Map as ImmutableMap, fromJS } from 'immutable';
+import { Map as ImmutableMap, List as ImmutableList, fromJS } from 'immutable';
 import uuid from '../uuid';
+//import { set } from 'lodash';
 
 const initialState = ImmutableMap({
   saved: true,
 
   skinTone: 1,
+
+  algorithm: 'default',
+
+  newsfeedCompare: ImmutableList(['default', 'diversity']),
+
+  personalization: ImmutableMap({
+    insideBubble: ImmutableList([]),
+    outsideBubble: ImmutableList([]),
+  }),
 
   trends: ImmutableMap({
     show: true,
@@ -96,11 +118,12 @@ const defaultColumns = fromJS([
   { id: 'NOTIFICATIONS', uuid: uuid(), params: {} },
 ]);
 
-const hydrate = (state, settings) => state.mergeDeep(settings).update('columns', (val = defaultColumns) => val);
+const hydrate = (state, settings) =>
+  state.mergeDeep(settings).update('columns', (val = defaultColumns) => val);
 
 const moveColumn = (state, uuid, direction) => {
-  const columns  = state.get('columns');
-  const index    = columns.findIndex(item => item.get('uuid') === uuid);
+  const columns = state.get('columns');
+  const index = columns.findIndex((item) => item.get('uuid') === uuid);
   const newIndex = index + direction;
 
   let newColumns;
@@ -108,42 +131,81 @@ const moveColumn = (state, uuid, direction) => {
   newColumns = columns.splice(index, 1);
   newColumns = newColumns.splice(newIndex, 0, columns.get(index));
 
-  return state
-    .set('columns', newColumns)
-    .set('saved', false);
+  return state.set('columns', newColumns).set('saved', false);
 };
 
 const changeColumnParams = (state, uuid, path, value) => {
   const columns = state.get('columns');
-  const index   = columns.findIndex(item => item.get('uuid') === uuid);
+  const index = columns.findIndex((item) => item.get('uuid') === uuid);
 
-  const newColumns = columns.update(index, column => column.updateIn(['params', ...path], () => value));
+  const newColumns = columns.update(index, (column) =>
+    column.updateIn(['params', ...path], () => value),
+  );
 
-  return state
-    .set('columns', newColumns)
-    .set('saved', false);
+  return state.set('columns', newColumns).set('saved', false);
 };
 
-const updateFrequentEmojis = (state, emoji) => state.update('frequentlyUsedEmojis', ImmutableMap(), map => map.update(emoji.id, 0, count => count + 1)).set('saved', false);
+const updateFrequentEmojis = (state, emoji) =>
+  state
+    .update('frequentlyUsedEmojis', ImmutableMap(), (map) =>
+      map.update(emoji.id, 0, (count) => count + 1),
+    )
+    .set('saved', false);
 
-const filterDeadListColumns = (state, listId) => state.update('columns', columns => columns.filterNot(column => column.get('id') === 'LIST' && column.get('params').get('id') === listId));
+const filterDeadListColumns = (state, listId) =>
+  state.update('columns', (columns) =>
+    columns.filterNot(
+      (column) =>
+        column.get('id') === 'LIST' && column.get('params').get('id') === listId,
+    ),
+  );
 
 export default function settings(state = initialState, action) {
-  switch(action.type) {
+  switch (action.type) {
   case STORE_HYDRATE:
     return hydrate(state, action.state.get('settings'));
   case NOTIFICATIONS_FILTER_SET:
   case SETTING_CHANGE:
+    return state.setIn(action.path, action.value).set('saved', false);
+  // case 'RESET':
+  //   return state.setIn(['personalization', 'outsideBubble'], ImmutableList(['1.0', '5.0']));
+  case SETTING_BUBBLE_LIST_ADD:
     return state
-      .setIn(action.path, action.value)
+      .updateIn(['personalization', action.path], (list) =>
+        list.push(action.value),
+      )
+      .set('saved', false);
+  case SETTING_BUBBLE_LIST_REMOVE:
+    return state
+      .updateIn(['personalization', action.path], (list) =>
+        list.delete(list.indexOf(action.value)),
+      )
+      .set('saved', false);
+  case SETTING_NEWSFEED_COMPARE_ADD:
+    return state
+      .update('newsfeedCompare', (list) =>
+        list.push(action.value),
+      )
+      .set('saved', false);
+  case SETTING_NEWSFEED_COMPARE_REMOVE:
+    return state
+      .update('newsfeedCompare', action.path, (list) =>
+        list.delete(list.indexOf(action.value)),
+      )
       .set('saved', false);
   case COLUMN_ADD:
     return state
-      .update('columns', list => list.push(fromJS({ id: action.id, uuid: uuid(), params: action.params })))
+      .update('columns', (list) =>
+        list.push(
+          fromJS({ id: action.id, uuid: uuid(), params: action.params }),
+        ),
+      )
       .set('saved', false);
   case COLUMN_REMOVE:
     return state
-      .update('columns', list => list.filterNot(item => item.get('uuid') === action.uuid))
+      .update('columns', (list) =>
+        list.filterNot((item) => item.get('uuid') === action.uuid),
+      )
       .set('saved', false);
   case COLUMN_MOVE:
     return moveColumn(state, action.uuid, action.direction);
@@ -154,10 +216,12 @@ export default function settings(state = initialState, action) {
   case SETTING_SAVE:
     return state.set('saved', true);
   case LIST_FETCH_FAIL:
-    return action.error.response.status === 404 ? filterDeadListColumns(state, action.id) : state;
+    return action.error.response.status === 404
+      ? filterDeadListColumns(state, action.id)
+      : state;
   case LIST_DELETE_SUCCESS:
     return filterDeadListColumns(state, action.id);
   default:
     return state;
   }
-};
+}
