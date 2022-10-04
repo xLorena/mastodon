@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
 import Column from '../../components/column';
 import ColumnHeader from '../../components/column_header';
-import { expandCommunityTimeline } from '../../actions/timelines';
+import { expandCommunityTimeline, expandDiverseSortedTimeline } from '../../actions/timelines';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import { connectCommunityStream } from '../../actions/streaming';
@@ -71,6 +71,7 @@ class NewsfeedCompare extends React.PureComponent {
     const { dispatch, onlyMedia } = this.props;
 
     dispatch(expandCommunityTimeline({ onlyMedia }));
+    dispatch(expandDiverseSortedTimeline({ onlyMedia }));
     this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
   }
 
@@ -80,6 +81,7 @@ class NewsfeedCompare extends React.PureComponent {
 
       this.disconnect();
       dispatch(expandCommunityTimeline({ onlyMedia }));
+      dispatch(expandDiverseSortedTimeline({ onlyMedia }));
       this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
     }
   }
@@ -99,6 +101,7 @@ class NewsfeedCompare extends React.PureComponent {
     const { dispatch, onlyMedia } = this.props;
 
     dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
+    dispatch(expandDiverseSortedTimeline({ maxId, onlyMedia }));
   }
 
   render () {
@@ -117,7 +120,7 @@ class NewsfeedCompare extends React.PureComponent {
           pinned={pinned}
           multiColumn={multiColumn}
         >
-          {/* <ColumnSettingsContainer columnId={columnId} /> */}
+          <ColumnSettingsContainer columnId={columnId} />
         </ColumnHeader>
         <div className='newsfeed-compare'>
           <div className='newsfeed-compare__row'>
@@ -140,7 +143,7 @@ class NewsfeedCompare extends React.PureComponent {
             <StatusListContainer
               trackScroll={!pinned}
               scrollKey={'community_timeline-2'}
-              timelineId={'community'}
+              timelineId={'diverse'}
               onLoadMore={this.handleLoadMore}
               emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
               bindToDocument={!multiColumn}
