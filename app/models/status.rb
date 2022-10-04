@@ -24,6 +24,7 @@
 #  poll_id                :bigint(8)
 #  deleted_at             :datetime
 #  edited_at              :datetime
+#  sentiment_score        :float
 #
 
 class Status < ApplicationRecord
@@ -46,6 +47,7 @@ class Status < ApplicationRecord
   update_index('statuses', :proper)
 
   enum visibility: [:public, :unlisted, :private, :direct, :limited], _suffix: :visibility
+  #enum sentiment_score: [:0, :1, :2, :3, :4, :5, :6, :7, :8, :9, :10], _suffix: :visibility
 
   belongs_to :application, class_name: 'Doorkeeper::Application', optional: true
 
@@ -73,9 +75,11 @@ class Status < ApplicationRecord
 
   has_one :notification, as: :activity, dependent: :destroy
   has_one :status_stat, inverse_of: :status
+  #has_one :sentiment_score
   has_one :poll, inverse_of: :status, dependent: :destroy
 
   validates :uri, uniqueness: true, presence: true, unless: :local?
+ # validates :sentiment_score, presence: true
   validates :text, presence: true, unless: -> { with_media? || reblog? }
   validates_with StatusLengthValidator
   validates_with DisallowedHashtagsValidator
@@ -87,6 +91,7 @@ class Status < ApplicationRecord
   default_scope { recent.kept }
 
   scope :recent, -> { reorder(id: :desc) }
+ # scope :diverse_order, -> { reorder(sentiment_score: :desc) }
   scope :remote, -> { where(local: false).where.not(uri: nil) }
   scope :local,  -> { where(local: true).or(where(uri: nil)) }
   scope :with_accounts, ->(ids) { where(id: ids).includes(:account) }
@@ -160,6 +165,10 @@ class Status < ApplicationRecord
 
   def local?
     attributes['local'] || uri.nil?
+  end
+
+  def sentiment_score
+    attributes['sentiment_score']
   end
 
   def in_reply_to_local_account?

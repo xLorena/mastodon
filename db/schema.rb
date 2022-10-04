@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_10_153119) do
+ActiveRecord::Schema.define(version: 2022_07_09_133735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,11 +153,11 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.string "url"
     t.string "avatar_file_name"
     t.string "avatar_content_type"
-    t.integer "avatar_file_size"
+    t.bigint "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.string "header_file_name"
     t.string "header_content_type"
-    t.integer "header_file_size"
+    t.bigint "header_file_size"
     t.datetime "header_updated_at"
     t.string "avatar_remote_url"
     t.boolean "locked", default: false, null: false
@@ -182,8 +182,8 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.integer "avatar_storage_schema_version"
     t.integer "header_storage_schema_version"
     t.string "devices_url"
-    t.integer "suspension_origin"
     t.datetime "sensitized_at"
+    t.integer "suspension_origin"
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
     t.index "lower((username)::text), COALESCE(lower((domain)::text), ''::text)", name: "index_accounts_on_username_and_domain_lower", unique: true
     t.index ["moved_to_account_id"], name: "index_accounts_on_moved_to_account_id"
@@ -324,7 +324,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.string "domain"
     t.string "image_file_name"
     t.string "image_content_type"
-    t.integer "image_file_size"
+    t.bigint "image_file_size"
     t.datetime "image_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -471,7 +471,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.datetime "updated_at", null: false
     t.string "data_file_name"
     t.string "data_content_type"
-    t.integer "data_file_size"
+    t.bigint "data_file_size"
     t.datetime "data_updated_at"
     t.bigint "account_id", null: false
     t.boolean "overwrite", default: false, null: false
@@ -492,12 +492,12 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
   end
 
   create_table "ip_blocks", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "expires_at"
     t.inet "ip", default: "0.0.0.0", null: false
     t.integer "severity", default: 0, null: false
+    t.datetime "expires_at"
     t.text "comment", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "list_accounts", force: :cascade do |t|
@@ -544,7 +544,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.bigint "status_id"
     t.string "file_file_name"
     t.string "file_content_type"
-    t.integer "file_file_size"
+    t.bigint "file_file_size"
     t.datetime "file_updated_at"
     t.string "remote_url", default: "", null: false
     t.datetime "created_at", null: false
@@ -560,7 +560,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.integer "file_storage_schema_version"
     t.string "thumbnail_file_name"
     t.string "thumbnail_content_type"
-    t.integer "thumbnail_file_size"
+    t.bigint "thumbnail_file_size"
     t.datetime "thumbnail_updated_at"
     t.string "thumbnail_remote_url"
     t.index ["account_id", "status_id"], name: "index_media_attachments_on_account_id_and_status_id", order: { status_id: :desc }
@@ -716,7 +716,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.string "description", default: "", null: false
     t.string "image_file_name"
     t.string "image_content_type"
-    t.integer "image_file_size"
+    t.bigint "image_file_size"
     t.datetime "image_updated_at"
     t.integer "type", default: 0, null: false
     t.text "html", default: "", null: false
@@ -825,7 +825,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.string "var", default: "", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.integer "file_file_size"
+    t.bigint "file_file_size"
     t.datetime "file_updated_at"
     t.json "meta"
     t.datetime "created_at", null: false
@@ -848,8 +848,8 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
   create_table "status_pins", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "status_id", null: false
-    t.datetime "created_at", default: -> { "now()" }, null: false
-    t.datetime "updated_at", default: -> { "now()" }, null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["account_id", "status_id"], name: "index_status_pins_on_account_id_and_status_id", unique: true
   end
 
@@ -884,6 +884,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_153119) do
     t.bigint "poll_id"
     t.datetime "deleted_at"
     t.datetime "edited_at"
+    t.float "sentiment_score"
     t.index ["account_id", "id", "visibility", "updated_at"], name: "index_statuses_20190820", order: { id: :desc }, where: "(deleted_at IS NULL)"
     t.index ["deleted_at"], name: "index_statuses_on_deleted_at", where: "(deleted_at IS NOT NULL)"
     t.index ["id", "account_id"], name: "index_statuses_local_20190824", order: { id: :desc }, where: "((local OR (uri IS NULL)) AND (deleted_at IS NULL) AND (visibility = 0) AND (reblog_of_id IS NULL) AND ((NOT reply) OR (in_reply_to_account_id = account_id)))"

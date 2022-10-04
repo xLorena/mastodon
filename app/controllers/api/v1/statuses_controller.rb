@@ -42,6 +42,7 @@ class Api::V1::StatusesController < Api::BaseController
       media_ids: status_params[:media_ids],
       sensitive: status_params[:sensitive],
       spoiler_text: status_params[:spoiler_text],
+      sentiment_score: status_params[:sentiment_score],
       visibility: status_params[:visibility],
       language: status_params[:language],
       scheduled_at: status_params[:scheduled_at],
@@ -65,6 +66,7 @@ class Api::V1::StatusesController < Api::BaseController
       media_ids: status_params[:media_ids],
       sensitive: status_params[:sensitive],
       spoiler_text: status_params[:spoiler_text],
+      sentiment_score: status_params[:sentiment_score],
       poll: status_params[:poll]
     )
 
@@ -103,6 +105,7 @@ class Api::V1::StatusesController < Api::BaseController
       :in_reply_to_id,
       :sensitive,
       :spoiler_text,
+      :sentiment_score,
       :visibility,
       :language,
       :scheduled_at,
