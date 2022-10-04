@@ -5043,6 +5043,8 @@ a.status-card.compact:hover {
   position: relative;
   flex-direction: column;
 
+ 
+
   .status__display-name {
     display: block;
     max-width: 100%;
@@ -5059,6 +5061,17 @@ a.status-card.compact:hover {
 
   .status__content__spoiler-link {
     color: lighten($secondary-text-color, 8%);
+  }
+}
+
+.confirmation-modal--filter-bubble {
+  width: fit-content !important;
+  height: 90vh;
+  .outside-bubble:first-child {
+    margin-top: 40px !important;
+  }
+  .outside-bubble:last-child {
+    margin-top: 40px !important;
   }
 }
 
