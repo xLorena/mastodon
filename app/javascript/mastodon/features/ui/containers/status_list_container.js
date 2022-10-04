@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import StatusList from '../../../components/status_list';
 import { scrollTopTimeline, loadPending } from '../../../actions/timelines';
+import { fetchFavouritedStatuses } from '../../../actions/favourites';
 import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
 import { createSelector } from 'reselect';
 import { debounce } from 'lodash';
@@ -41,6 +42,8 @@ const makeMapStateToProps = () => {
     isPartial: state.getIn(['timelines', timelineId, 'isPartial'], false),
     hasMore:   state.getIn(['timelines', timelineId, 'hasMore']),
     numPending: getPendingStatusIds(state, { type: timelineId }).size,
+    // insideBubble: state.getIn(['settings', 'personalization', 'insideBubble']),
+    // outsideBubble: state.getIn(['settings', 'personalization', 'outsideBubble']),
   });
 
   return mapStateToProps;
@@ -57,6 +60,10 @@ const mapDispatchToProps = (dispatch, { timelineId }) => ({
   }, 100),
 
   onLoadPending: () => dispatch(loadPending(timelineId)),
+
+  fetchFavouritedStatuses() {
+    dispatch(fetchFavouritedStatuses());
+  },
 
 });
 
