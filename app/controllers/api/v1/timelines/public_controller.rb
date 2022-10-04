@@ -35,6 +35,7 @@ class Api::V1::Timelines::PublicController < Api::BaseController
   def public_feed
     PublicFeed.new(
       current_account,
+      diverse_sorted: truthy_param?(:diverse_sorted),
       local: truthy_param?(:local),
       remote: truthy_param?(:remote),
       only_media: truthy_param?(:only_media)
@@ -46,7 +47,7 @@ class Api::V1::Timelines::PublicController < Api::BaseController
   end
 
   def pagination_params(core_params)
-    params.slice(:local, :remote, :limit, :only_media).permit(:local, :remote, :limit, :only_media).merge(core_params)
+    params.slice(:diverse_sorted, :local, :remote, :limit, :only_media ).permit(:diverse_sorted, :local, :remote, :limit, :only_media).merge(core_params)
   end
 
   def next_path

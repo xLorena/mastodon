@@ -5,6 +5,7 @@ class PublicFeed
   # @param [Hash] options
   # @option [Boolean] :with_replies
   # @option [Boolean] :with_reblogs
+  # @option [Boolean] :diverse_sorted
   # @option [Boolean] :local
   # @option [Boolean] :remote
   # @option [Boolean] :only_media
@@ -27,8 +28,13 @@ class PublicFeed
     scope.merge!(remote_only_scope) if remote_only?
     scope.merge!(account_filters_scope) if account?
     scope.merge!(media_only_scope) if media_only?
-
-    scope.cache_ids.to_a_paginated_by_id(limit, max_id: max_id, since_id: since_id, min_id: min_id)
+    # scope.sort_by(&Labels) if diverse_sorted?
+    # scope.cache_ids.to_a_paginated_by_id(limit, max_id: max_id, since_id: since_id, min_id: min_id)
+    if diverse_sorted?
+      scope.cache_ids.to_a_paginated_by_id(limit, max_id: max_id, since_id: since_id, min_id: min_id).sort_by{ |item| item.sentiment_score}
+    else 
+      scope.cache_ids.to_a_paginated_by_id(limit, max_id: max_id, since_id: since_id, min_id: min_id)
+    end
   end
 
   private
@@ -41,6 +47,10 @@ class PublicFeed
 
   def with_replies?
     options[:with_replies]
+  end
+
+  def diverse_sorted?
+    options[:diverse_sorted]
   end
 
   def local_only?
@@ -61,6 +71,10 @@ class PublicFeed
 
   def public_scope
     Status.with_public_visibility.joins(:account).merge(Account.without_suspended.without_silenced)
+  end
+
+  def diverse_sorted_scope
+    Status.diverse_sorted
   end
 
   def local_only_scope
