@@ -27,6 +27,7 @@ import {
   COMPOSE_SENSITIVITY_CHANGE,
   COMPOSE_SPOILERNESS_CHANGE,
   COMPOSE_SPOILER_TEXT_CHANGE,
+  // COMPOSE_SENTIMENT_SCORE_CHANGE,
   COMPOSE_VISIBILITY_CHANGE,
   COMPOSE_COMPOSING_CHANGE,
   COMPOSE_EMOJI_INSERT,
@@ -58,6 +59,7 @@ const initialState = ImmutableMap({
   sensitive: false,
   spoiler: false,
   spoiler_text: '',
+  sentiment_score: 0,
   privacy: null,
   id: null,
   text: '',
@@ -113,6 +115,7 @@ function clearAll(state) {
     map.set('text', '');
     map.set('spoiler', false);
     map.set('spoiler_text', '');
+    map.set('sentiment_score', 0);
     map.set('is_submitting', false);
     map.set('is_changing_upload', false);
     map.set('in_reply_to', null);
@@ -304,6 +307,10 @@ export default function compose(state = initialState, action) {
     return state
       .set('spoiler_text', action.text)
       .set('idempotencyKey', uuid());
+  // case COMPOSE_SENTIMENT_SCORE_CHANGE:
+  //   return state
+  //     .set('sentiment_score', action.status.get('sentiment_score'))
+  //     .set('idempotencyKey', uuid());
   case COMPOSE_VISIBILITY_CHANGE:
     return state
       .set('privacy', action.value)
@@ -319,6 +326,7 @@ export default function compose(state = initialState, action) {
       map.set('id', null);
       map.set('in_reply_to', action.status.get('id'));
       map.set('text', statusToTextMentions(state, action.status));
+      map.set('sentiment_score', action.status.get('sentiment_score'));
       map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
       map.set('focusDate', new Date());
       map.set('caretPosition', null);
@@ -435,6 +443,7 @@ export default function compose(state = initialState, action) {
       map.set('text', action.raw_text || unescapeHTML(expandMentions(action.status)));
       map.set('in_reply_to', action.status.get('in_reply_to_id'));
       map.set('privacy', action.status.get('visibility'));
+      map.set('sentiment_score', action.status.get('sentiment_score'));
       map.set('media_attachments', action.status.get('media_attachments'));
       map.set('focusDate', new Date());
       map.set('caretPosition', null);
@@ -463,6 +472,7 @@ export default function compose(state = initialState, action) {
       map.set('text', action.text);
       map.set('in_reply_to', action.status.get('in_reply_to_id'));
       map.set('privacy', action.status.get('visibility'));
+      map.set('sentiment_score', action.status.get('sentiment_score'));
       map.set('media_attachments', action.status.get('media_attachments'));
       map.set('focusDate', new Date());
       map.set('caretPosition', null);
