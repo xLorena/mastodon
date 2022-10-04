@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import Toggle from 'react-toggle';
 
 export default class SettingRadio extends React.PureComponent {
 
@@ -16,7 +17,7 @@ export default class SettingRadio extends React.PureComponent {
   };
 
   onChange = ({ target }) => {
-    this.props.onChange(this.props.settingPath, target.checked);
+    if(target.checked) this.props.onChange(this.props.value);
   };
 
   render() {
@@ -28,20 +29,23 @@ export default class SettingRadio extends React.PureComponent {
 
     return (
       <div className='setting-checkbox'>
-        <input
+        {/* <input
           disabled={disabled}
           type='radio'
           name='used-algorithm'
           onKeyDown={this.onKeyDown}
           value={value}
-        />
-        {/* <Toggle
+          onChange={this.onChange}
+          // checked={settings.getIn(settingPath) === 'default'}
+        /> */}
+        <Toggle
           disabled={disabled}
           id={id}
-          checked={settings.getIn(settingPath, defaultValue)}
+          // checked={settings.getIn(settingPath, defaultValue)}
+          checked={settings === value ? true : settings.includes(value)}
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
-        /> */}
+        />
         <label htmlFor={id} className='setting-toggle__label'>
           {label}
         </label>
