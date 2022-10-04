@@ -54,6 +54,7 @@ class SessionActivation < ApplicationRecord
       where(session_id: id).destroy_all
     end
 
+    #comment to find this later again: example usage of order created_at
     def purge_old
       order('created_at desc').offset(Rails.configuration.x.max_session_activations).destroy_all
     end
