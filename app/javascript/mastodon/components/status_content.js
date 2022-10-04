@@ -222,7 +222,6 @@ export default class StatusContent extends React.PureComponent {
           <div tabIndex={!hidden ? 0 : null} className={`status__content__text ${!hidden ? 'status__content__text--visible' : ''} translate`} dangerouslySetInnerHTML={content} />
 
           {!hidden && !!status.get('poll') && <PollContainer pollId={status.get('poll')} />}
-
           {renderViewThread && showThreadButton}
         </div>
       );
@@ -232,7 +231,7 @@ export default class StatusContent extends React.PureComponent {
           <div className='status__content__text status__content__text--visible translate' dangerouslySetInnerHTML={content} />
 
           {!!status.get('poll') && <PollContainer pollId={status.get('poll')} />}
-
+          {/* <h3>{'Sentiment Score: ' + status.get('sentiment_score')}</h3> */}
           {renderViewThread && showThreadButton}
         </div>,
       ];
@@ -246,9 +245,8 @@ export default class StatusContent extends React.PureComponent {
       return (
         <div className={classNames} ref={this.setRef} tabIndex='0' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
           <div className='status__content__text status__content__text--visible translate' dangerouslySetInnerHTML={content} />
-
           {!!status.get('poll') && <PollContainer pollId={status.get('poll')} />}
-
+          
           {renderViewThread && showThreadButton}
         </div>
       );
