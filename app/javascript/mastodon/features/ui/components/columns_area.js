@@ -36,7 +36,8 @@ import { scrollRight } from '../../../scroll';
 
 const componentMap = {
   'COMPOSE': Compose,
-  'HOME': HomeTimeline,
+  // 'HOME': HomeTimeline,
+  'HOME': CommunityTimeline,
   'NOTIFICATIONS': Notifications,
   'PUBLIC': PublicTimeline,
   'REMOTE': PublicTimeline,
