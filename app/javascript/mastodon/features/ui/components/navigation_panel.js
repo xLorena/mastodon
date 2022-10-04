@@ -37,7 +37,7 @@ const NavigationPanel = (props) => (
       />
     </NavLink> */}
     <FollowRequestsNavLink />
-    <NavLink
+    {/* <NavLink
       className="column-link column-link--transparent"
       to="/public/local"
       data-preview-title-id="column.community"
@@ -62,7 +62,7 @@ const NavigationPanel = (props) => (
           defaultMessage="Federated"
         />
       </span>
-    </NavLink>
+    </NavLink> */}
     {/* <NavLink
       className="column-link column-link--transparent"
       to="/conversations"
