@@ -1096,11 +1096,11 @@
   {
     "descriptors": [
       {
-        "defaultMessage": "Local timeline",
+        "defaultMessage": "Home timeline",
         "id": "column.community"
       },
       {
-        "defaultMessage": "The local timeline is empty. Write something publicly to get the ball rolling!",
+        "defaultMessage": "The home timeline is empty. Write something publicly to get the ball rolling!",
         "id": "empty_column.community"
       }
     ],
@@ -1895,7 +1895,7 @@
         "id": "column_subheading.settings"
       },
       {
-        "defaultMessage": "Local timeline",
+        "defaultMessage": "Home timeline",
         "id": "navigation_bar.community_timeline"
       },
       {
