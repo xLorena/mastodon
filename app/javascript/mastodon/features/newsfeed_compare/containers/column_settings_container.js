@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ColumnSettings from '../components/column_settings';
-import { changeSetting } from '../../../actions/settings';
+import { addToSettingNewsfeedCompare, changeSetting, removeFromSettingNewsfeedCompare } from '../../../actions/settings';
 import { changeColumnParams } from '../../../actions/columns';
 
 const mapStateToProps = (state, { columnId }) => {
@@ -10,6 +10,7 @@ const mapStateToProps = (state, { columnId }) => {
 
   return {
     settings: (uuid && index >= 0) ? columns.get(index).get('params') : state.getIn(['settings', 'community']),
+    selectedNewsfeedCompare: state.getIn(['settings', 'newsfeedCompare']),
   };
 };
 
@@ -21,6 +22,11 @@ const mapDispatchToProps = (dispatch, { columnId }) => {
       } else {
         dispatch(changeSetting(['community', ...key], checked));
       }
+    },
+    onNewsfeedCompareChange (key, checked){
+      console.log(key, checked);
+      // if(!checked) dispatch(removeFromSettingNewsfeedCompare(key));
+      // else dispatch(addToSettingNewsfeedCompare(key));
     },
   };
 };
