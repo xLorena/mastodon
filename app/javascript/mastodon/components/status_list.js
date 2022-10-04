@@ -25,11 +25,19 @@ export default class StatusList extends ImmutablePureComponent {
     emptyMessage: PropTypes.node,
     alwaysPrepend: PropTypes.bool,
     timelineId: PropTypes.string,
+    timelineMode: PropTypes.string,
+    fetchFavouritedStatuses: PropTypes.func,
+    // insideBubble: PropTypes.array,
+    // outsideBubble: PropTypes.array,
   };
 
   static defaultProps = {
     trackScroll: true,
   };
+
+  componentWillMount() {
+    this.props.fetchFavouritedStatuses();
+  }
 
   getFeaturedStatusCount = () => {
     return this.props.featuredStatusIds ? this.props.featuredStatusIds.size : 0;
@@ -76,14 +84,42 @@ export default class StatusList extends ImmutablePureComponent {
   }
 
   render () {
-    const { statusIds, featuredStatusIds, onLoadMore, timelineId, ...other }  = this.props;
+    const { statusIds, featuredStatusIds, onLoadMore, timelineId, timelineMode, ...other }  = this.props;
     const { isLoading, isPartial } = other;
 
     if (isPartial) {
       return <RegenerationIndicator />;
     }
 
-    let scrollableContent = (isLoading || statusIds.size > 0) ? (
+    let scrollableContent = null;
+
+    // if(timelineMode === 'personalized') {
+    //   scrollableContent  = (isLoading || statusIds.size > 0) ? (
+    //     statusIds.map((statusId, index) => statusId === null ? (
+    //       <LoadGap
+    //         key={'gap:' + statusIds.get(index + 1)}
+    //         disabled={isLoading}
+    //         maxId={index > 0 ? statusIds.get(index - 1) : null}
+    //         onClick={onLoadMore}
+    //       />
+    //     ) : (
+    //       <StatusContainer
+    //         // insideBubble={insideBubble}
+    //         // outsideBubble={outsideBubble}
+    //         personalized={timelineMode === 'personalized'}
+    //         key={statusId}
+    //         id={statusId}
+    //         onMoveUp={this.handleMoveUp}
+    //         onMoveDown={this.handleMoveDown}
+    //         contextType={timelineId}
+    //         scrollKey={this.props.scrollKey}
+    //         showThread
+    //       />
+    //     ))
+    //   ) : null;
+    // }
+
+    scrollableContent = (isLoading || statusIds.size > 0) ? (
       statusIds.map((statusId, index) => statusId === null ? (
         <LoadGap
           key={'gap:' + statusIds.get(index + 1)}
