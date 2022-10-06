@@ -20,10 +20,12 @@ const mapStateToProps = (state, { columnId }) => {
   const index = columns.findIndex(c => c.get('uuid') === uuid);
   const onlyMedia = (columnId && index >= 0) ? columns.get(index).getIn(['params', 'other', 'onlyMedia']) : state.getIn(['settings', 'community', 'other', 'onlyMedia']);
   const timelineState = state.getIn(['timelines', `community${onlyMedia ? ':media' : ''}`]);
+  const selectedNewsfeedCompare = state.getIn(['settings', 'newsfeedCompare']);
 
   return {
     hasUnread: !!timelineState && timelineState.get('unread') > 0,
     onlyMedia,
+    selectedNewsfeedCompare,
   };
 };
 
@@ -46,6 +48,7 @@ class NewsfeedCompare extends React.PureComponent {
     hasUnread: PropTypes.bool,
     multiColumn: PropTypes.bool,
     onlyMedia: PropTypes.bool,
+    selectedNewsfeedCompare: PropTypes.object,
   };
 
   handlePin = () => {
@@ -105,8 +108,78 @@ class NewsfeedCompare extends React.PureComponent {
   }
 
   render () {
-    const { intl, hasUnread, columnId, multiColumn, onlyMedia } = this.props;
+    const { intl, hasUnread, columnId, multiColumn, onlyMedia, selectedNewsfeedCompare } = this.props;
     const pinned = !!columnId;
+
+    const renderDefaultStatusList = () => {
+      return (
+        <div className='newsfeed-compare__row--first'>
+          <div className='newsfeed-compare__caption'>
+            <FormattedMessage id='newsfeed_compare.default' defaultMessage='Default' />
+          </div>
+          <StatusListContainer
+            trackScroll={!pinned}
+            scrollKey={`community_timeline-${columnId}`}
+            timelineId={`community${onlyMedia ? ':media' : ''}`}
+            onLoadMore={this.handleLoadMore}
+            emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
+            bindToDocument={!multiColumn}
+          />
+        </div>);
+    };
+
+    const renderDiverseStatusList = () => {
+      return (
+        <div className='newsfeed-compare__row--second'>
+          <div className='newsfeed-compare__caption'>
+            <FormattedMessage id='newsfeed_compare.diverse' defaultMessage='Divers' />
+          </div>
+          <StatusListContainer
+            trackScroll={!pinned}
+            scrollKey={'community_timeline-2'}
+            timelineId={'diverse'}
+            onLoadMore={this.handleLoadMore}
+            emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
+            bindToDocument={!multiColumn}
+          />
+        </div>);
+    };
+
+    const renderNewnessStatusList = () => {
+      return (
+        <div className='newsfeed-compare__row--third'>
+          <div className='newsfeed-compare__caption'>
+            <FormattedMessage id='newsfeed_compare.newness' defaultMessage='Neuheitsbasiert' />
+          </div>
+          <StatusListContainer
+            timelineId={'community'}
+            onLoadMore={this.handleLoadMore}
+            trackScroll={!pinned}
+            scrollKey={'community_timeline-3'}
+            emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up' />}
+            bindToDocument={!multiColumn}
+          />
+        </div>);
+    };
+
+    // const renderPersonalizedStatusList = () => {
+    //   return (
+    //     <div className='newsfeed-compare__row--fourth'>
+    //       <div className='newsfeed-compare__caption'>
+    //         <FormattedMessage id='newsfeed_compare.newness' defaultMessage='Neuheitsbasiert' />
+    //       </div>
+    //       <StatusListContainer
+    //         trackScroll={!pinned}
+    //         scrollKey={`community_timeline-${columnId}`}
+    //         timelineId={'community'}
+    //         timelineMode={'personalized'}
+    //         onLoadMore={this.handleLoadMore}
+    //         emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The timeline is empty. Write something publicly to get the ball rolling!' />}
+    //         bindToDocument={!multiColumn}
+    //       />
+    //     </div>
+    //   );
+    // };
 
     return (
       <Column bindToDocument={!multiColumn} ref={this.setRef} label={intl.formatMessage(messages.title)}>
@@ -123,45 +196,13 @@ class NewsfeedCompare extends React.PureComponent {
           <ColumnSettingsContainer columnId={columnId} />
         </ColumnHeader>
         <div className='newsfeed-compare'>
-          <div className='newsfeed-compare__row'>
-            <div className='newsfeed-compare__caption'>
-              <FormattedMessage id='newsfeed_compare.default' defaultMessage='Default' />
-            </div>
-            <StatusListContainer
-              trackScroll={!pinned}
-              scrollKey={`community_timeline-${columnId}`}
-              timelineId={`community${onlyMedia ? ':media' : ''}`}
-              onLoadMore={this.handleLoadMore}
-              emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
-              bindToDocument={!multiColumn}
-            />
-          </div>
-          <div className='newsfeed-compare__row--middle'>
-            <div className='newsfeed-compare__caption'>
-              <FormattedMessage id='newsfeed_compare.diverse' defaultMessage='Divers' />
-            </div>
-            <StatusListContainer
-              trackScroll={!pinned}
-              scrollKey={'community_timeline-2'}
-              timelineId={'diverse'}
-              onLoadMore={this.handleLoadMore}
-              emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
-              bindToDocument={!multiColumn}
-            />
-          </div>
-          <div className='newsfeed-compare__row'>
-            <div className='newsfeed-compare__caption'>
-              <FormattedMessage id='newsfeed_compare.newness' defaultMessage='Neuheitsbasiert' />
-            </div>
-            <StatusListContainer
-              timelineId={'community'}
-              onLoadMore={this.handleLoadMore}
-              trackScroll={!pinned}
-              scrollKey={'community_timeline-3'}
-              emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up' />}
-              bindToDocument={!multiColumn}
-            />
-          </div>
+          {/* {renderDefaultStatusList()} */}
+          {/* {renderDiverseStatusList()}
+          {renderNewnessStatusList()} */}
+          {selectedNewsfeedCompare.includes('default') ? renderDefaultStatusList() : null}
+          {selectedNewsfeedCompare.includes('diversity') ? renderDiverseStatusList() : null}
+          {selectedNewsfeedCompare.includes('newness') ? renderNewnessStatusList() : null}
+          {/* {selectedNewsfeedCompare.includes('user') ? renderPersonalizedStatusList() : null} */}
         </div>
       </Column>
     );

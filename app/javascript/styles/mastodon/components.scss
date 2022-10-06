@@ -3231,12 +3231,20 @@ button.icon-button.active i.fa-retweet {
 .newsfeed-compare {
   flex-direction: row;
   display: flex;
-  &__row {
+  &__row--first {
     flex-grow: 1;
     background-color: #282c37;
   }
-  &__row--middle {
+  &__row--second {
     flex-grow: 1;
+  }
+  &__row--third {
+    flex-grow: 1;
+    background-color: #313444;
+  }
+  &__row--fourth {
+    flex-grow: 1;
+    background-color: #181c27;
   }
   &__caption {
     text-align: center;
