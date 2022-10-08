@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_09_133735) do
+ActiveRecord::Schema.define(version: 2022_10_08_180114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -885,6 +885,7 @@ ActiveRecord::Schema.define(version: 2022_07_09_133735) do
     t.datetime "deleted_at"
     t.datetime "edited_at"
     t.float "sentiment_score"
+    t.float "polarization_score"
     t.index ["account_id", "id", "visibility", "updated_at"], name: "index_statuses_20190820", order: { id: :desc }, where: "(deleted_at IS NULL)"
     t.index ["deleted_at"], name: "index_statuses_on_deleted_at", where: "(deleted_at IS NOT NULL)"
     t.index ["id", "account_id"], name: "index_statuses_local_20190824", order: { id: :desc }, where: "((local OR (uri IS NULL)) AND (deleted_at IS NULL) AND (visibility = 0) AND (reblog_of_id IS NULL) AND ((NOT reply) OR (in_reply_to_account_id = account_id)))"

@@ -25,6 +25,7 @@
 #  deleted_at             :datetime
 #  edited_at              :datetime
 #  sentiment_score        :float
+#  polarization_score     :float
 #
 
 class Status < ApplicationRecord
