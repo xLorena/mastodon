@@ -172,6 +172,10 @@ class Status < ApplicationRecord
     attributes['sentiment_score']
   end
 
+  def polarization_score
+    attributes['polarization_score']
+  end
+
   def in_reply_to_local_account?
     reply? && thread&.account&.local?
   end

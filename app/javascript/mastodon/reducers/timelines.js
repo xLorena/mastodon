@@ -41,6 +41,7 @@ const expandNormalizedTimeline = (state, timeline, statuses, next, isPartial, is
     if (timeline.endsWith(':pinned')) {
       mMap.set('items', statuses.map(status => status.get('id')));
     } else if(timeline === 'diverse') {
+      //TODO: Check: is there even a sentiment_score in statuses element ?
       mMap.set('items', statuses.sort((a, b) => a.get('sentiment_score') - b.get('sentiment_score')).map(status => status.get('id')));
     } else if (!statuses.isEmpty()) {
       usePendingItems = isLoadingRecent && (usePendingItems || !mMap.get('pendingItems').isEmpty());

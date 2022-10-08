@@ -163,6 +163,7 @@ class PostStatusService < BaseService
       spoiler_text: @options[:spoiler_text] || '',
       visibility: @visibility,
       sentiment_score: @sentiment_score,
+      polarization_score: @polarization_score,
       language: valid_locale_or_nil(@options[:language].presence || @account.user&.preferred_posting_language || I18n.default_locale),
       application: @options[:application],
       rate_limit: @options[:with_rate_limit],

@@ -43,6 +43,7 @@ class Api::V1::StatusesController < Api::BaseController
       sensitive: status_params[:sensitive],
       spoiler_text: status_params[:spoiler_text],
       sentiment_score: status_params[:sentiment_score],
+      polarization_score: status_params[:polarization_score],
       visibility: status_params[:visibility],
       language: status_params[:language],
       scheduled_at: status_params[:scheduled_at],
@@ -67,6 +68,7 @@ class Api::V1::StatusesController < Api::BaseController
       sensitive: status_params[:sensitive],
       spoiler_text: status_params[:spoiler_text],
       sentiment_score: status_params[:sentiment_score],
+      polarization_score: status_params[:polarization_score],
       poll: status_params[:poll]
     )
 
@@ -106,6 +108,7 @@ class Api::V1::StatusesController < Api::BaseController
       :sensitive,
       :spoiler_text,
       :sentiment_score,
+      :polarization_score,
       :visibility,
       :language,
       :scheduled_at,

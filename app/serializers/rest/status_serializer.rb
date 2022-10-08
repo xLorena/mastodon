@@ -4,7 +4,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   attributes :id, :created_at, :in_reply_to_id, :in_reply_to_account_id,
              :sensitive, :spoiler_text, :visibility, :language,
              :uri, :url, :replies_count, :reblogs_count,
-             :favourites_count, :edited_at, :sentiment_score
+             :favourites_count, :edited_at, :sentiment_score, :polarization_score
 
   attribute :favourited, if: :current_user?
   attribute :reblogged, if: :current_user?
@@ -41,6 +41,10 @@ class REST::StatusSerializer < ActiveModel::Serializer
 
   def sentiment_score
     object.sentiment_score.to_s
+  end
+
+  def polarization_score
+    object.polarization_score.to_s
   end
 
   def current_user?

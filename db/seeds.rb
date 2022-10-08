@@ -15,7 +15,7 @@ if Rails.env.development?
   User.where(email: "admin@#{domain}").first_or_initialize(email: "admin@#{domain}", password: 'mastodonadmin', password_confirmation: 'mastodonadmin', confirmed_at: Time.now.utc, admin: true, account: admin, agreement: true, approved: true).save!
 
 
-  csv_text = File.read(Rails.root.join('datasets', 'covid', 'test3.0.csv'))
+  csv_text = File.read(Rails.root.join('datasets', 'covid', 'test4.0.csv'))
   csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
   counter = 0
   csv.each do |row|
@@ -24,7 +24,7 @@ if Rails.env.development?
     account.save(validate: false)
     User.where(email: "user#{counter}@#{domain}").first_or_initialize(email: "user#{counter}@#{domain}", password: 'mastodontest', password_confirmation: 'mastodontest', confirmed_at: Time.now.utc, account: account, agreement: true, approved: true).save!
     Follow.create(account_id: adminId, target_account_id: account.id, created_at: Time.now.utc + counter * 5, updated_at: Time.now.utc + counter * 5)
-    Status.create(account_id: account.id, text: row['Tweet'], created_at: Time.now.utc + counter * 10, updated_at: Time.now.utc + counter * 10, local: true, sentiment_score: row['Labels'].to_f, polarization_score: row['Score'] )
+    Status.create(account_id: account.id, text: row['Tweet'], created_at: Time.now.utc + counter * 10, updated_at: Time.now.utc + counter * 10, local: true, sentiment_score: row['Labels'].to_f, polarization_score: row['Score'].to_f )
     counter = counter + 1
   end
 
