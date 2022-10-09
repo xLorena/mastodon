@@ -149,7 +149,7 @@ class RelativeTimestamp extends React.Component {
       this.state.now !== nextState.now;
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.props.timestamp !== nextProps.timestamp) {
       this.setState({ now: this.props.intl.now() });
     }
@@ -159,7 +159,7 @@ class RelativeTimestamp extends React.Component {
     this._scheduleNextUpdate(this.props, this.state);
   }
 
-  componentWillUpdate (nextProps, nextState) {
+  UNSAFE_componentWillUpdate (nextProps, nextState) {
     this._scheduleNextUpdate(nextProps, nextState);
   }
 

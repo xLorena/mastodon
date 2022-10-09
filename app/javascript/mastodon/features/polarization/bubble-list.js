@@ -48,7 +48,7 @@ class BubbleList extends React.PureComponent {
     outsideBubble: PropTypes.array,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.dispatch(fetchFavouritedStatuses());
   }
 

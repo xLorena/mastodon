@@ -26,7 +26,7 @@ export default class AnimatedNumber extends React.PureComponent {
     direction: 1,
   };
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (nextProps.value > this.props.value) {
       this.setState({ direction: 1 });
     } else if (nextProps.value < this.props.value) {

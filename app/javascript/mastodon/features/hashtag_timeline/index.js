@@ -103,7 +103,7 @@ class HashtagTimeline extends React.PureComponent {
     dispatch(expandHashtagTimeline(id, { tags, local }));
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     const { dispatch, params } = this.props;
     const { id, tags, local } = nextProps.params;
 

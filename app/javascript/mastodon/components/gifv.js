@@ -19,7 +19,7 @@ export default class GIFV extends React.PureComponent {
     this.setState({ loading: false });
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (nextProps.src !== this.props.src) {
       this.setState({ loading: true });
     }

@@ -65,7 +65,7 @@ class Polarization extends React.PureComponent {
     favorites: PropTypes.object,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.dispatch(fetchFavouritedStatuses());
   }
 

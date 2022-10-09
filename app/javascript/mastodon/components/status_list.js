@@ -35,7 +35,7 @@ export default class StatusList extends ImmutablePureComponent {
     trackScroll: true,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.fetchFavouritedStatuses();
   }
 

@@ -65,7 +65,7 @@ class CommunityTimeline extends React.PureComponent {
     outsideBubble: PropTypes.object,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.dispatch(fetchFavouritedStatuses());
   }
 

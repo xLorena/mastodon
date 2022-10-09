@@ -39,7 +39,7 @@ class AwarenessInformation extends ImmutablePureComponent {
     isLoading: PropTypes.bool,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.dispatch(fetchFavouritedStatuses());
   }
 

@@ -43,7 +43,7 @@ export default class IconButton extends React.PureComponent {
     deactivate: false,
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (!nextProps.animate) return;
 
     if (this.props.active && !nextProps.active) {

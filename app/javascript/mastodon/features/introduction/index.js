@@ -111,7 +111,7 @@ class Introduction extends React.PureComponent {
     currentIndex: 0,
   };
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.pages = [
       <FrameWelcome domain={this.props.domain} onNext={this.handleNext} />,
       <FrameFederation onNext={this.handleNext} />,

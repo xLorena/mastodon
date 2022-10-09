@@ -79,7 +79,7 @@ class ColumnsArea extends ImmutablePureComponent {
     renderComposePanel: !(this.mediaQuery && this.mediaQuery.matches),
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     if (typeof this.pendingIndex !== 'number' && this.lastIndex !== getIndex(this.context.router.history.location.pathname)) {
       this.setState({ shouldAnimate: false });
     }
@@ -105,7 +105,7 @@ class ColumnsArea extends ImmutablePureComponent {
     this.setState({ shouldAnimate: true });
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     if (this.props.singleColumn !== nextProps.singleColumn && nextProps.singleColumn) {
       this.node.removeEventListener('wheel', this.handleWheel);
     }
