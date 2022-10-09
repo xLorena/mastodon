@@ -138,17 +138,9 @@ class CommunityTimeline extends React.PureComponent {
   }
 
   bubbleArray = () => {
-    const { insideBubble, outsideBubble, favourites, statuses } = this.props;
-    const bubbleArray = [];
-    //test//
-    var sentimentScore;
-    favourites.forEach(statusId => {
-      sentimentScore = statuses.getIn([statusId, 'sentiment_score']);
-      if(!bubbleArray.includes(sentimentScore)){
-        bubbleArray.push(sentimentScore);
-      }
-    });
-    //test//
+    const { insideBubble, outsideBubble } = this.props;
+    const bubbleArray = this.topicArray();
+
     //add sentiment classes from insideBubble
     insideBubble.forEach(sentimentScore => {
       bubbleArray.push(sentimentScore);
