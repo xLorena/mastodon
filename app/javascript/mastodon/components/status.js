@@ -320,6 +320,35 @@ class Status extends ImmutablePureComponent {
       return null;
     }
 
+    const sentimentMap = (sentimentScore) => {
+      switch (sentimentScore) {
+      case '0.0':
+        return 'Optimistic';
+      case '1.0':
+        return 'Thankful';
+      case '2.0':
+        return 'Empathetic';
+      case '3.0':
+        return 'Pessimistic';
+      case '4.0':
+        return 'Anxious';
+      case '5.0':
+        return 'Sad';
+      case '6.0':
+        return 'Annoyed';
+      case '7.0':
+        return 'Denial';
+      case '8.0':
+        return 'Surprise';
+      case '9.0':
+        return 'Official report';
+      case '10.0':
+        return 'Joking';
+      default:
+        return 'not classified';
+      }
+    };
+
     const handlers = this.props.muted ? {} : {
       reply: this.handleHotkeyReply,
       favourite: this.handleHotkeyFavourite,
@@ -360,9 +389,9 @@ class Status extends ImmutablePureComponent {
             <StatusContent status={status} onClick={this.handleClick} expanded={!status.get('hidden')} showThread={showThread} onExpandedToggle={this.handleExpandedToggle} collapsable onCollapsedToggle={this.handleCollapsedToggle} />
             {/* <h3>{'AccountID: ' + status.getIn(['account', 'id'])}</h3>
             <h3>{'Visibility: ' + status.get('visibility')}</h3> */}
-            <h3>{'Sentiment class: ' + status.get('sentiment_score')}</h3>
+            <h3>{'Sentiment class: ' + sentimentMap(status.get('sentiment_score'))}</h3>
             <h3>{'Polarization score: ' + status.get('polarization_score')}</h3>
-            <h3>{JSON.stringify(insideBubble) + ' / ' + JSON.stringify(outsideBubble)}</h3>
+            {/* <h3>{JSON.stringify(insideBubble) + ' / ' + JSON.stringify(outsideBubble)}</h3> */}
             {/* <h3>{'Favourites:' + favourites}</h3> */}
             {/* <h3>{'statuses: ' + statuses}</h3> */}
             {/* <h3>{JSON.stringify(algorithm === 'user')}</h3> */}
