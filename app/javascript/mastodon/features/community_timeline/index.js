@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
 import Column from '../../components/column';
 import ColumnHeader from '../../components/column_header';
-import { expandCommunityTimeline, expandDiverseSortedTimeline } from '../../actions/timelines';
+import { expandCommunityTimeline, expandDiverseSortedTimeline, expandPersonalizedTimeline, expandNewnessTimeline } from '../../actions/timelines';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import { connectCommunityStream } from '../../actions/streaming';
+import { fetchFavouritedStatuses } from '../../actions/favourites';
 
 const messages = defineMessages({
   title: { id: 'column.community', defaultMessage: 'Home timeline' },
@@ -21,11 +22,20 @@ const mapStateToProps = (state, { columnId }) => {
   const index = columns.findIndex(c => c.get('uuid') === uuid);
   const onlyMedia = (columnId && index >= 0) ? columns.get(index).getIn(['params', 'other', 'onlyMedia']) : state.getIn(['settings', 'community', 'other', 'onlyMedia']);
   const timelineState = state.getIn(['timelines', `community${onlyMedia ? ':media' : ''}`]);
+  const favourites = state.getIn(['status_lists', 'favourites', 'items']);
+  const insideBubble = state.getIn(['settings', 'personalization', 'insideBubble']);
+  const outsideBubble = state.getIn(['settings', 'personalization', 'outsideBubble']);
+  const statuses = state.get('statuses');
+
 
   return {
     hasUnread: !!timelineState && timelineState.get('unread') > 0,
     onlyMedia,
     selectedAlgorithm,
+    favourites,
+    insideBubble,
+    outsideBubble,
+    statuses,
   };
 };
 
@@ -49,7 +59,15 @@ class CommunityTimeline extends React.PureComponent {
     multiColumn: PropTypes.bool,
     onlyMedia: PropTypes.bool,
     selectedAlgorithm: PropTypes.string,
+    statuses: PropTypes.object,
+    favourites: PropTypes.object,
+    insideBubble: PropTypes.object,
+    outsideBubble: PropTypes.object,
   };
+
+  componentWillMount() {
+    this.props.dispatch(fetchFavouritedStatuses());
+  }
 
   handlePin = () => {
     const { columnId, dispatch, onlyMedia } = this.props;
@@ -72,19 +90,25 @@ class CommunityTimeline extends React.PureComponent {
 
   componentDidMount () {
     const { dispatch, onlyMedia } = this.props;
-
+    const topicArray = this.topicArray();
+    const bubbleArray = this.bubbleArray();
     dispatch(expandCommunityTimeline({ onlyMedia }));
+    dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
     dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+    dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
     this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
   }
 
   componentDidUpdate (prevProps) {
     if (prevProps.onlyMedia !== this.props.onlyMedia) {
       const { dispatch, onlyMedia } = this.props;
-
+      const topicArray = this.topicArray();
+      const bubbleArray = this.bubbleArray();
       this.disconnect();
       dispatch(expandCommunityTimeline({ onlyMedia }));
+      dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
       dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+      dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
       this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
     }
   }
@@ -100,11 +124,53 @@ class CommunityTimeline extends React.PureComponent {
     this.column = c;
   }
 
-  handleLoadMore = maxId => {
-    const { dispatch, onlyMedia } = this.props;
+  topicArray = () => {
+    const { favourites, statuses } = this.props;
+    const topicArray = [];
+    var sentimentScore;
+    favourites.forEach(statusId => {
+      sentimentScore = statuses.getIn([statusId, 'sentiment_score']);
+      if(!topicArray.includes(sentimentScore)){
+        topicArray.push(sentimentScore);
+      }
+    });
+    return topicArray;
+  }
 
-    dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
-    dispatch(expandDiverseSortedTimeline({ maxId, onlyMedia }));
+  bubbleArray = () => {
+    const { insideBubble, outsideBubble, favourites, statuses } = this.props;
+    const bubbleArray = [];
+    //test//
+    var sentimentScore;
+    favourites.forEach(statusId => {
+      sentimentScore = statuses.getIn([statusId, 'sentiment_score']);
+      if(!bubbleArray.includes(sentimentScore)){
+        bubbleArray.push(sentimentScore);
+      }
+    });
+    //test//
+    //add sentiment classes from insideBubble
+    insideBubble.forEach(sentimentScore => {
+      bubbleArray.push(sentimentScore);
+    });
+    //remove sentiment classes from outsideBubble
+    outsideBubble.forEach(sentimentScore => {
+      bubbleArray.splice(bubbleArray.indexOf(sentimentScore), 1);
+    });
+    console.log(bubbleArray);
+    return bubbleArray;
+  }
+
+
+  handleLoadMore = maxId => {
+    const { dispatch, onlyMedia, selectedAlgorithm } = this.props;
+    const topicArray = this.topicArray();
+    const bubbleArray = this.bubbleArray();
+
+    if(selectedAlgorithm === 'default') dispatch(expandCommunityTimeline({ onlyMedia }));
+    if(selectedAlgorithm === 'newness') dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
+    if(selectedAlgorithm === 'diversity') dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+    if(selectedAlgorithm === 'user') dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
   }
 
   render () {
@@ -128,31 +194,31 @@ class CommunityTimeline extends React.PureComponent {
         { selectedAlgorithm === 'user' ?
           <StatusListContainer
             trackScroll={!pinned}
-            scrollKey={`community_timeline-${columnId}`}
-            timelineId={'community'}
+            scrollKey={`timeline-${columnId}`}
+            timelineId={'personalized'}
             timelineMode={'personalized'}
             onLoadMore={this.handleLoadMore}
-            emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The timeline is empty. Write something publicly to get the ball rolling!' />}
+            emptyMessage={<FormattedMessage id='empty_column.personalized' defaultMessage='The personalized timeline is empty. You have to favourite posts to see something here.' />}
             bindToDocument={!multiColumn}
           /> : selectedAlgorithm === 'diversity' ?
             <StatusListContainer
               trackScroll={!pinned}
-              scrollKey={`community_timeline-${columnId}`}
+              scrollKey={`timeline-${columnId}`}
               timelineId={'diverse'}
               onLoadMore={this.handleLoadMore}
               emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The timeline is empty. Write something publicly to get the ball rolling!' />}
               bindToDocument={!multiColumn}
             /> : selectedAlgorithm ==='newness' ?
               <StatusListContainer
-                timelineId={'community'}
+                timelineId={'newness'}
                 onLoadMore={this.handleLoadMore}
                 trackScroll={!pinned}
-                scrollKey={'community_timeline-3'}
+                scrollKey={`timeline-${columnId}`}
                 emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up' />}
                 bindToDocument={!multiColumn}
-              /> :    <StatusListContainer
+              /> :  <StatusListContainer
                 trackScroll={!pinned}
-                scrollKey={`community_timeline-${columnId}`}
+                scrollKey={`timeline-${columnId}`}
                 timelineId={`community${onlyMedia ? ':media' : ''}`}
                 onLoadMore={this.handleLoadMore}
                 emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The timeline is empty. Write something publicly to get the ball rolling!' />}
