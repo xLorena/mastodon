@@ -7,7 +7,7 @@ export default class SettingRadio extends React.PureComponent {
 
   static propTypes = {
     prefix: PropTypes.string,
-    settings: PropTypes.object.isRequired,
+    settings: PropTypes.string.isRequired,
     settingPath: PropTypes.array.isRequired,
     label: PropTypes.node.isRequired,
     onChange: PropTypes.func.isRequired,
