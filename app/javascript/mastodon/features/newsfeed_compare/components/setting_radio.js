@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
+//import ImmutablePropTypes from 'react-immutable-proptypes';
 import Toggle from 'react-toggle';
 
 export default class SettingRadio extends React.PureComponent {
 
   static propTypes = {
     prefix: PropTypes.string,
-    settings: ImmutablePropTypes.map.isRequired,
+    settings: PropTypes.object.isRequired,
     settingPath: PropTypes.array.isRequired,
     label: PropTypes.node.isRequired,
     onChange: PropTypes.func.isRequired,

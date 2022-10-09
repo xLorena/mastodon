@@ -99,8 +99,8 @@ class Status extends ImmutablePureComponent {
     cachedMediaWidth: PropTypes.number,
     scrollKey: PropTypes.string,
     deployPictureInPicture: PropTypes.func,
-    insideBubble: PropTypes.array,
-    outsideBubble: PropTypes.array,
+    insideBubble: PropTypes.object,
+    outsideBubble: PropTypes.object,
     favourites: PropTypes.object,
     statuses: PropTypes.object,
     algorithm: PropTypes.string,
@@ -360,8 +360,8 @@ class Status extends ImmutablePureComponent {
             <StatusContent status={status} onClick={this.handleClick} expanded={!status.get('hidden')} showThread={showThread} onExpandedToggle={this.handleExpandedToggle} collapsable onCollapsedToggle={this.handleCollapsedToggle} />
             {/* <h3>{'AccountID: ' + status.getIn(['account', 'id'])}</h3>
             <h3>{'Visibility: ' + status.get('visibility')}</h3> */}
-            <h3>{'Sentiment Score: ' + status.get('sentiment_score')}</h3>
-            <h3>{'Polarization Score: ' + status.get('polarization_score')}</h3>
+            <h3>{'Sentiment class: ' + status.get('sentiment_score')}</h3>
+            <h3>{'Polarization score: ' + status.get('polarization_score')}</h3>
             <h3>{JSON.stringify(insideBubble) + ' / ' + JSON.stringify(outsideBubble)}</h3>
             {/* <h3>{'Favourites:' + favourites}</h3> */}
             {/* <h3>{'statuses: ' + statuses}</h3> */}
@@ -385,16 +385,16 @@ class Status extends ImmutablePureComponent {
       );
     };
 
-    const renderHiddenByPersonalization = () => {
-      return (
-        <HotKeys handlers={handlers}>
-          <div ref={this.handleRef} className={classNames('status__wrapper', { focusable: !this.props.muted })} tabIndex='0'>
-            {/* <span>{status.getIn(['account', 'display_name']) || status.getIn(['account', 'username'])}</span>
-            <span>{status.get('content')}</span> */}
-          </div>
-        </HotKeys>
-      );
-    };
+    // const renderHiddenByPersonalization = () => {
+    //   return (
+    //     <HotKeys handlers={handlers}>
+    //       <div ref={this.handleRef} className={classNames('status__wrapper', { focusable: !this.props.muted })} tabIndex='0'>
+    //         {/* <span>{status.getIn(['account', 'display_name']) || status.getIn(['account', 'username'])}</span>
+    //         <span>{status.get('content')}</span> */}
+    //       </div>
+    //     </HotKeys>
+    //   );
+    // };
 
     if (hidden) {
       renderHidden();
@@ -543,28 +543,28 @@ class Status extends ImmutablePureComponent {
 
     const visibilityIcon = visibilityIconInfo[status.get('visibility')];
 
-    const isInFavourites = () => {
-      var found = false;
-      var sentimentScore;
-      favourites.forEach((statusId) => {
-        sentimentScore = statuses.getIn([statusId, 'sentiment_score']);
-        if (status.get('sentimentScore') === sentimentScore) {
-          found = true;
-          return false;
-        }
-        return true;
-        // found = statuses.hasIn([statusId, 'sentiment_score'])
-      });
-      return found;
-    };
+    // const isInFavourites = () => {
+    //   var found = false;
+    //   var sentimentScore;
+    //   favourites.forEach((statusId) => {
+    //     sentimentScore = statuses.getIn([statusId, 'sentiment_score']);
+    //     if (status.get('sentimentScore') === sentimentScore) {
+    //       found = true;
+    //       return false;
+    //     }
+    //     return true;
+    //     // found = statuses.hasIn([statusId, 'sentiment_score'])
+    //   });
+    //   return found;
+    // };
 
 
-    if (algorithm === 'user'){
-      if(outsideBubble.includes(status.get('sentiment_score'))) return renderHiddenByPersonalization();
-      if(insideBubble.includes(status.get('sentiment_score'))) return renderStatus();
-      //if(!isInFavourites()) return renderHiddenByPersonalization();
-      //else return renderHiddenByPersonalization();
-    }
+    // if (algorithm === 'user'){
+    //   if(outsideBubble.includes(status.get('sentiment_score'))) return renderHiddenByPersonalization();
+    //   if(insideBubble.includes(status.get('sentiment_score'))) return renderStatus();
+    //   //if(!isInFavourites()) return renderHiddenByPersonalization();
+    //   //else return renderHiddenByPersonalization();
+    // }
 
     return renderStatus();
   }

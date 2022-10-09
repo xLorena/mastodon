@@ -121,7 +121,7 @@ class ColumnSettings extends React.PureComponent {
                   />
                   {/* <DropdownMenu renderItem={this.renderItem} scrollable onItemClick={this.handleItemClick}> */}
                   <button className='dropdown-menu__text-button' onClick={this.handleItemClick}>
-                    <Icon id='caret-down' fixedWidth={100} />
+                    <Icon id='caret-down' fixedWidth />
                   </button>
                   {/* </DropdownMenu> */}
                   {/* <DropdownMenuContainer
