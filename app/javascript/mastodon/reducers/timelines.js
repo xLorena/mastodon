@@ -16,7 +16,7 @@ import {
   ACCOUNT_MUTE_SUCCESS,
   ACCOUNT_UNFOLLOW_SUCCESS,
 } from '../actions/accounts';
-import { Map as ImmutableMap, List as ImmutableList, fromJS } from 'immutable';
+import { Map as ImmutableMap, List as ImmutableList, fromJS, OrderedMap } from 'immutable';
 import compareId from '../compare_id';
 
 const initialState = ImmutableMap();
@@ -30,6 +30,26 @@ const initialTimeline = ImmutableMap({
   pendingItems: ImmutableList(),
   items: ImmutableList(),
 });
+
+const sortAlternative = (statuses) => {
+  const statusesArray = statuses.sort((a, b) => a.get('polarization_score') - b.get('polarization_score')).toArray();
+  const newStatuses = [];
+  const n = statuses.size;
+  var i = 0;
+  var j = n - 1;
+  while (i < j){
+    newStatuses.push(statusesArray[j--]);
+    newStatuses.push(statusesArray[i++]);
+  }
+
+  // If the total element in array is odd
+  // then print the last middle element.
+  if (n % 2 !== 0) newStatuses.push(statusesArray[i]);
+
+  const oMap = fromJS(newStatuses);
+
+  return oMap;
+};
 
 const expandNormalizedTimeline = (
   state,
@@ -54,12 +74,12 @@ const expandNormalizedTimeline = (
           statuses.map((status) => status.get('id')),
         );
       } else if (timeline === 'diverse') {
-        //Sort elements according to sentiment_score
+        //Sort elements according to polarization_score
         mMap.set(
           'items',
-          statuses
-            .sort((a, b) => b.get('polarization_score') - a.get('polarization_score'))
-            .map((status) => status.get('id')),
+          // statuses
+          //   .sort((a, b) => a.get('polarization_score') - b.get('polarization_score'))
+          sortAlternative(statuses).map((status) => status.get('id')),
         );
       } else if (timeline === 'personalized') {
         //Only show items that have a sentiment_score that is included in the topicArray
