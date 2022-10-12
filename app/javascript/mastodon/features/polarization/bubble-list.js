@@ -75,66 +75,10 @@ class BubbleList extends React.PureComponent {
     console.log('selected bubble clicked outside');
   }
 
-  // handlePin = () => {
-  //   const { columnId, dispatch, onlyMedia } = this.props;
-
-  //   if (columnId) {
-  //     dispatch(removeColumn(columnId));
-  //   } else {
-  //     dispatch(addColumn('COMMUNITY', { other: { onlyMedia } }));
-  //   }
-  // };
-
-  // handleMove = (dir) => {
-  //   const { columnId, dispatch } = this.props;
-  //   dispatch(moveColumn(columnId, dir));
-  // };
-
-  // handleHeaderClick = () => {
-  //   this.column.scrollTop();
-  // };
-
-  // componentDidMount() {
-  //   const { dispatch, onlyMedia } = this.props;
-
-  //   dispatch(expandCommunityTimeline({ onlyMedia }));
-  //   dispatch(expandDiverseSortedTimeline({ onlyMedia }));
-  //   this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.onlyMedia !== this.props.onlyMedia) {
-  //     const { dispatch, onlyMedia } = this.props;
-
-  //     this.disconnect();
-  //     dispatch(expandCommunityTimeline({ onlyMedia }));
-  //     dispatch(expandDiverseSortedTimeline({ onlyMedia }));
-  //     this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
-  //   }
-  // }
-
-  // componentWillUnmount() {
-  //   if (this.disconnect) {
-  //     this.disconnect();
-  //     this.disconnect = null;
-  //   }
-  // }
-
-  // setRef = (c) => {
-  //   this.column = c;
-  // };
-
-  // handleLoadMore = (maxId) => {
-  //   const { dispatch, onlyMedia } = this.props;
-
-  //   dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
-  //   dispatch(expandDiverseSortedTimeline({ maxId, onlyMedia }));
-  // };
 
   render() {
     const { statuses, favorites, insideBubble, outsideBubble } = this.props;
 
-    // var sentimentObj = { '0.0': 0, '1.0': 0, '2.0':0, '3.0': 0, '4.0': 0, '5.0':0, '6.0': 0, '7.0': 0, '8.0':0, '9.0': 0, '10.0': 0, 'not classified':0 };
     var sentimentObj = [
       { key: '0.0', value: 0 },
       { key: '1.0', value: 0 },
@@ -148,25 +92,6 @@ class BubbleList extends React.PureComponent {
       { key: '9.0', value: 0 },
       { key: '10.0', value: 0 },
     ];
-    // const updateSentimentObj = () => {
-    //   statuses.forEach(status => {
-    //     sentimentObj[status.get('sentiment_score')] = sentimentObj[status.get('sentiment_score')] + 1.0;
-    //   });
-    //   return sentimentObj;
-    // };
-
-    // const updateSentimentObj = () => {
-    //   var item;
-    //   var index;
-    //   statuses.forEach(status => {
-    //     item = sentimentObj.find((item)=> item.key === status.get('sentiment_score'));
-    //     if(item){
-    //       index = sentimentObj.indexOf(item);
-    //       sentimentObj[index].value = sentimentObj[index].value + 1.0;
-    //     }
-    //   });
-    //   return sentimentObj;
-    // };
 
     const updateSentimentObj = () => {
       var item;
@@ -213,38 +138,8 @@ class BubbleList extends React.PureComponent {
     };
 
     const calculateSize = (sentimentScore) => {
-      // var counter = 0;
-      // statuses.forEach(status => {
-      //   if(status.get('sentiment_score') === sentimentScore) {
-      //     counter++;
-      //   }
-      // });
       return sentimentScore / Object.keys(statuses).length;
     };
-
-    // const renderBubbleList = statuses.map((status) => (
-    //   <div key={status.id} style={{ borderRadius: '50%', width: '100px', height:'100px', backgroundColor: 'lightblue', display:'flex', justifyContent: 'center', alignItems:'center' }}>
-    //     <div style={{}}>
-    //       <p style={{ color: 'black', fontSize: 18 }}>
-    //         {sentimentMap(status.get('sentiment_score'))}
-    //       </p>
-    //     </div>
-    //   </div>));
-
-    // const BubbleList = ({ statuses }) => (
-    //   <>
-    //     {statuses.map(status => (
-    //       <div key={status.get('id')} style={{ borderRadius: '50%', width: 100*calculateSize(status.get('sentiment_score'))+50, height:100*calculateSize(status.get('sentiment_score'))+50, backgroundColor: 'lightblue', display:'flex', justifyContent: 'center', alignItems:'center' }}>
-    //         <p style={{ color: 'black', fontSize: 14 }}>
-    //           {sentimentMap(status.get('sentiment_score'))}
-    //         </p>
-    //         <p>
-    //           {calculateSize(status.get('sentiment_score'))}
-    //         </p>
-    //       </div>
-    //     ))}
-    //   </>
-    // );
 
     return (
       <div>
