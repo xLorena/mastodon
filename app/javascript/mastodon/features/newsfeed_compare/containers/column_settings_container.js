@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch, { columnId }) => {
       if(settings.includes(key)) {
         dispatch(removeFromSettingNewsfeedCompare(key));
       } else{
-        if(settings.size === 3){
+        if(settings.size >= 3){
           dispatch(removeFromSettingNewsfeedCompare(settings.last()));
         }
         dispatch(addToSettingNewsfeedCompare(key));

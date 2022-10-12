@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
 import Column from '../../components/column';
 import ColumnHeader from '../../components/column_header';
-import { expandCommunityTimeline, expandDiverseSortedTimeline } from '../../actions/timelines';
+import { expandCommunityTimeline, expandDiverseSortedTimeline, expandPersonalizedTimeline, expandNewnessTimeline } from '../../actions/timelines';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import { connectCommunityStream } from '../../actions/streaming';
+import { fetchFavouritedStatuses } from '../../actions/favourites';
 
 const messages = defineMessages({
   title: { id: 'column.community', defaultMessage: 'Local timeline' },
@@ -21,11 +22,19 @@ const mapStateToProps = (state, { columnId }) => {
   const onlyMedia = (columnId && index >= 0) ? columns.get(index).getIn(['params', 'other', 'onlyMedia']) : state.getIn(['settings', 'community', 'other', 'onlyMedia']);
   const timelineState = state.getIn(['timelines', `community${onlyMedia ? ':media' : ''}`]);
   const selectedNewsfeedCompare = state.getIn(['settings', 'newsfeedCompare']);
+  const favourites = state.getIn(['status_lists', 'favourites', 'items']);
+  const insideBubble = state.getIn(['settings', 'personalization', 'insideBubble']);
+  const outsideBubble = state.getIn(['settings', 'personalization', 'outsideBubble']);
+  const statuses = state.get('statuses');
 
   return {
     hasUnread: !!timelineState && timelineState.get('unread') > 0,
     onlyMedia,
     selectedNewsfeedCompare,
+    favourites,
+    insideBubble,
+    outsideBubble,
+    statuses,
   };
 };
 
@@ -49,7 +58,15 @@ class NewsfeedCompare extends React.PureComponent {
     multiColumn: PropTypes.bool,
     onlyMedia: PropTypes.bool,
     selectedNewsfeedCompare: PropTypes.object,
+    statuses: PropTypes.object,
+    favourites: PropTypes.object,
+    insideBubble: PropTypes.object,
+    outsideBubble: PropTypes.object,
   };
+
+  UNSAFE_componentWillMount() {
+    this.props.dispatch(fetchFavouritedStatuses());
+  }
 
   handlePin = () => {
     const { columnId, dispatch, onlyMedia } = this.props;
@@ -72,19 +89,25 @@ class NewsfeedCompare extends React.PureComponent {
 
   componentDidMount () {
     const { dispatch, onlyMedia } = this.props;
-
+    const topicArray = this.topicArray();
+    const bubbleArray = this.bubbleArray();
     dispatch(expandCommunityTimeline({ onlyMedia }));
+    dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
     dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+    dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
     this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
   }
 
   componentDidUpdate (prevProps) {
     if (prevProps.onlyMedia !== this.props.onlyMedia) {
       const { dispatch, onlyMedia } = this.props;
-
+      const topicArray = this.topicArray();
+      const bubbleArray = this.bubbleArray();
       this.disconnect();
       dispatch(expandCommunityTimeline({ onlyMedia }));
+      dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
       dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+      dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
       this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
     }
   }
@@ -100,12 +123,57 @@ class NewsfeedCompare extends React.PureComponent {
     this.column = c;
   }
 
+  topicArray = () => {
+    const { favourites, statuses } = this.props;
+    const topicArray = [];
+    var sentimentScore;
+    favourites.forEach(statusId => {
+      sentimentScore = statuses.getIn([statusId, 'sentiment_score']);
+      if(!topicArray.includes(sentimentScore)){
+        topicArray.push(sentimentScore);
+      }
+    });
+    return topicArray;
+  }
+
+  bubbleArray = () => {
+    const { insideBubble, outsideBubble } = this.props;
+    const bubbleArray = this.topicArray();
+
+    //add sentiment classes from insideBubble
+    insideBubble.forEach(sentimentScore => {
+      bubbleArray.push(sentimentScore);
+    });
+    //remove sentiment classes from outsideBubble
+    outsideBubble.forEach(sentimentScore => {
+      bubbleArray.splice(bubbleArray.indexOf(sentimentScore), 1);
+    });
+    console.log(bubbleArray);
+    return bubbleArray;
+  }
+
+
   handleLoadMore = maxId => {
     const { dispatch, onlyMedia } = this.props;
+    const topicArray = this.topicArray();
+    const bubbleArray = this.bubbleArray();
 
-    dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
-    dispatch(expandDiverseSortedTimeline({ maxId, onlyMedia }));
+    dispatch(expandCommunityTimeline({ onlyMedia }));
+    dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
+    dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+    dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
   }
+
+  // handleLoadMoreDiverse = maxId => {
+  //   const { dispatch, onlyMedia } = this.props;
+  //   // const topicArray = this.topicArray();
+  //   // const bubbleArray = this.bubbleArray();
+
+  //   // dispatch(expandCommunityTimeline({ onlyMedia }));
+  //   // dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
+  //   dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+  //   // dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
+  // }
 
   render () {
     const { intl, hasUnread, columnId, multiColumn, onlyMedia, selectedNewsfeedCompare } = this.props;
@@ -152,34 +220,34 @@ class NewsfeedCompare extends React.PureComponent {
             <FormattedMessage id='newsfeed_compare.newness' defaultMessage='Neuheitsbasiert' />
           </div>
           <StatusListContainer
-            timelineId={'community'}
+            timelineId={'newness'}
             onLoadMore={this.handleLoadMore}
             trackScroll={!pinned}
-            scrollKey={'community_timeline-3'}
+            scrollKey={`timeline-${columnId}`}
             emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up' />}
             bindToDocument={!multiColumn}
           />
         </div>);
     };
 
-    // const renderPersonalizedStatusList = () => {
-    //   return (
-    //     <div className='newsfeed-compare__row--fourth'>
-    //       <div className='newsfeed-compare__caption'>
-    //         <FormattedMessage id='newsfeed_compare.newness' defaultMessage='Neuheitsbasiert' />
-    //       </div>
-    //       <StatusListContainer
-    //         trackScroll={!pinned}
-    //         scrollKey={`community_timeline-${columnId}`}
-    //         timelineId={'community'}
-    //         timelineMode={'personalized'}
-    //         onLoadMore={this.handleLoadMore}
-    //         emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The timeline is empty. Write something publicly to get the ball rolling!' />}
-    //         bindToDocument={!multiColumn}
-    //       />
-    //     </div>
-    //   );
-    // };
+    const renderPersonalizedStatusList = () => {
+      return (
+        <div className='newsfeed-compare__row--fourth'>
+          <div className='newsfeed-compare__caption'>
+            <FormattedMessage id='newsfeed_compare.personalized' defaultMessage='Benutzerdefiniert' />
+          </div>
+          <StatusListContainer
+            trackScroll={!pinned}
+            scrollKey={'timeline-personalized'}
+            timelineId={'personalized'}
+            timelineMode={'personalized'}
+            onLoadMore={this.handleLoadMore}
+            emptyMessage={<FormattedMessage id='empty_column.personalized' defaultMessage='The personalized timeline is empty. You have to favourite posts to see something here.' />}
+            bindToDocument={!multiColumn}
+          />
+        </div>
+      );
+    };
 
     return (
       <Column bindToDocument={!multiColumn} ref={this.setRef} label={intl.formatMessage(messages.title)}>
@@ -196,13 +264,10 @@ class NewsfeedCompare extends React.PureComponent {
           <ColumnSettingsContainer columnId={columnId} />
         </ColumnHeader>
         <div className='newsfeed-compare'>
-          {/* {renderDefaultStatusList()} */}
-          {/* {renderDiverseStatusList()}
-          {renderNewnessStatusList()} */}
           {selectedNewsfeedCompare.includes('default') ? renderDefaultStatusList() : null}
           {selectedNewsfeedCompare.includes('diversity') ? renderDiverseStatusList() : null}
           {selectedNewsfeedCompare.includes('newness') ? renderNewnessStatusList() : null}
-          {/* {selectedNewsfeedCompare.includes('user') ? renderPersonalizedStatusList() : null} */}
+          {selectedNewsfeedCompare.includes('user') ? renderPersonalizedStatusList() : null}
         </div>
       </Column>
     );
