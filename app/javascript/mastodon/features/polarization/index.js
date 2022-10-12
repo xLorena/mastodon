@@ -13,6 +13,7 @@ import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 //import ColumnSettingsContainer from './containers/column_settings_container';
 import { connectCommunityStream } from '../../actions/streaming';
 import { fetchFavouritedStatuses } from '../../actions/favourites';
+import BubbleList from './bubble-list';
 
 const messages = defineMessages({
   title: { id: 'column.community', defaultMessage: 'Local timeline' },
@@ -249,93 +250,92 @@ class Polarization extends React.PureComponent {
     //   </>
     // );
 
-    const BubbleList = ({ statuses }) => (
-      <>
-        {/* <p>{'Hallo ' + JSON.stringify(favorites)}</p> */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: 'auto',
-            // marginLeft: 350,
-            marginTop: 100,
-            backgroundColor: 'cadetblue',
-            zIndex: 10,
-            borderRadius: '50%',
-            width: '65vh',
-            height: '65vh',
-            padding: 40,
-            border: '10px solid powderblue',
-            boxShadow: '0px 0px 0px 3px teal',
-          }}
-        >
-          {statuses.map((status) =>
-            status.value !== 0 ? (
-              <div
-                key={status.key}
-                style={{
-                  borderRadius: '50%',
-                  border: '10px solid powderblue',
-                  boxShadow: '0px 0px 0px 3px teal',
-                  width: 100 * calculateSize(status.value) + 100,
-                  height: 100 * calculateSize(status.value) + 100,
-                  backgroundColor: 'lightblue',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  margin: 15,
-                }}
-              >
-                <p style={{ color: 'black', fontSize: 14 }}>
-                  {sentimentMap(status.key)}
-                </p>
-              </div>
-            ) : (
-              <div
-                key={status.key}
-                style={{
-                  borderRadius: '50%',
-                  border: '3px solid tan',
-                  width: 100,
-                  height: 100,
-                  backgroundColor: 'wheat',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  margin: 15,
-                  position: 'absolute',
-                  top:
-                    parseInt(status.key) <= 5
-                      ? 200 - parseInt(status.key) * 40
-                      : 'initial',
-                  bottom:
-                    parseInt(status.key) <= 5
-                      ? 'initial'
-                      : 0 + parseInt(status.key) * 40,
-                  left:
-                    parseInt(status.key) <= 5
-                      ? parseInt(status.key) * 140
-                      : parseInt(status.key) * 210,
-                  // right: parseInt(status.key) <= 5 ? 'initial':parseInt(status.key)*80,
-                }}
-              >
-                <p style={{ color: 'black', fontSize: 14 }}>
-                  {sentimentMap(status.key)}
-                </p>
-              </div>
-            ),
-          )}
-        </div>
-        {/* <div style={{ backgroundColor:'blue', position:'absolute', width: 800, height: 800, borderRadius:'50%',   left: 0,
-          right: 0,
-          marginLeft: 'auto',
-          marginRight: 'auto'  }}
-        /> */}
-      </>
-    );
+    // const BubbleList = ({ statuses }) => (
+    //   <>
+    //     <div
+    //       style={{
+    //         display: 'flex',
+    //         flexDirection: 'row',
+    //         flexWrap: 'wrap',
+    //         justifyContent: 'center',
+    //         alignItems: 'center',
+    //         margin: 'auto',
+    //         // marginLeft: 350,
+    //         marginTop: 100,
+    //         backgroundColor: 'cadetblue',
+    //         zIndex: 10,
+    //         borderRadius: '50%',
+    //         width: '65vh',
+    //         height: '65vh',
+    //         padding: 40,
+    //         border: '10px solid powderblue',
+    //         boxShadow: '0px 0px 0px 3px teal',
+    //       }}
+    //     >
+    //       {statuses.map((status) =>
+    //         status.value !== 0 ? (
+    //           <div
+    //             key={status.key}
+    //             style={{
+    //               borderRadius: '50%',
+    //               border: '10px solid powderblue',
+    //               boxShadow: '0px 0px 0px 3px teal',
+    //               width: 100 * calculateSize(status.value) + 100,
+    //               height: 100 * calculateSize(status.value) + 100,
+    //               backgroundColor: 'lightblue',
+    //               display: 'flex',
+    //               justifyContent: 'center',
+    //               alignItems: 'center',
+    //               margin: 15,
+    //             }}
+    //           >
+    //             <p style={{ color: 'black', fontSize: 14 }}>
+    //               {sentimentMap(status.key)}
+    //             </p>
+    //           </div>
+    //         ) : (
+    //           <div
+    //             key={status.key}
+    //             style={{
+    //               borderRadius: '50%',
+    //               border: '3px solid tan',
+    //               width: 100,
+    //               height: 100,
+    //               backgroundColor: 'wheat',
+    //               display: 'flex',
+    //               justifyContent: 'center',
+    //               alignItems: 'center',
+    //               margin: 15,
+    //               position: 'absolute',
+    //               top:
+    //                 parseInt(status.key) <= 5
+    //                   ? 200 - parseInt(status.key) * 40
+    //                   : 'initial',
+    //               bottom:
+    //                 parseInt(status.key) <= 5
+    //                   ? 'initial'
+    //                   : 0 + parseInt(status.key) * 40,
+    //               left:
+    //                 parseInt(status.key) <= 5
+    //                   ? parseInt(status.key) * 140
+    //                   : parseInt(status.key) * 210,
+    //               // right: parseInt(status.key) <= 5 ? 'initial':parseInt(status.key)*80,
+    //             }}
+    //           >
+    //             <p style={{ color: 'black', fontSize: 14 }}>
+    //               {sentimentMap(status.key)}
+    //             </p>
+    //           </div>
+    //         ),
+    //       )}
+    //     </div>
+    //     {/* <div style={{ backgroundColor:'blue', position:'absolute', width: 800, height: 800, borderRadius:'50%',   left: 0,
+    //       right: 0,
+    //       marginLeft: 'auto',
+    //       marginRight: 'auto'  }}
+    //     /> */}
+    //   </>
+    // );
 
     return (
       <Column
@@ -353,8 +353,9 @@ class Polarization extends React.PureComponent {
           multiColumn={multiColumn}
           showBackButton
         />
+        <BubbleList />
         {/* <h3>{'Statuses' + JSON.stringify(statuses)}</h3> */}
-        <BubbleList statuses={updateSentimentObj()} />
+        {/* <BubbleList statuses={updateSentimentObj()} /> */}
         {/* <p>{JSON.stringify(updateSentimentObj())}</p> */}
         {/* <div className='newsfeed-compare__row'>
           <StatusListContainer
