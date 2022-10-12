@@ -390,7 +390,7 @@ class Status extends ImmutablePureComponent {
             {/* <h3>{'AccountID: ' + status.getIn(['account', 'id'])}</h3>
             <h3>{'Visibility: ' + status.get('visibility')}</h3> */}
             <h3>{'Sentiment class: ' + sentimentMap(status.get('sentiment_score'))}</h3>
-            <h3>{'Polarization score: ' + status.get('polarization_score')}</h3>
+            <h3>{'Polarization score: ' + status.get('polarization_score').slice(0, 4)}</h3>
             {/* <h3>{JSON.stringify(insideBubble) + ' / ' + JSON.stringify(outsideBubble)}</h3> */}
             {/* <h3>{'Favourites:' + favourites}</h3> */}
             {/* <h3>{'statuses: ' + statuses}</h3> */}
