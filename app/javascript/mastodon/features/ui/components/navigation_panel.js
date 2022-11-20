@@ -1,13 +1,13 @@
 /* eslint-disable jsx-quotes */
-import React from "react";
-import { NavLink, withRouter } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
-import Icon from "mastodon/components/icon";
-import { profile_directory, showTrends } from "mastodon/initial_state";
-import NotificationsCounterIcon from "./notifications_counter_icon";
-import FollowRequestsNavLink from "./follow_requests_nav_link";
-import ListPanel from "./list_panel";
-import TrendsContainer from "mastodon/features/getting_started/containers/trends_container";
+import React from 'react';
+import { NavLink, withRouter } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+import Icon from 'mastodon/components/icon';
+import { profile_directory, showTrends } from 'mastodon/initial_state';
+import NotificationsCounterIcon from './notifications_counter_icon';
+import FollowRequestsNavLink from './follow_requests_nav_link';
+import ListPanel from './list_panel';
+import TrendsContainer from 'mastodon/features/getting_started/containers/trends_container';
 
 const NavigationPanel = () => (
   <div className="navigation-panel">
@@ -33,7 +33,7 @@ const NavigationPanel = () => (
       />
     </NavLink> */}
     <FollowRequestsNavLink />
-    <NavLink
+    {/* <NavLink
       className="column-link column-link--transparent"
       to="/public/local"
       data-preview-title-id="column.community"
@@ -54,7 +54,7 @@ const NavigationPanel = () => (
         id="tabs_bar.federated_timeline"
         defaultMessage="Federated"
       />
-    </NavLink>
+    </NavLink> */}
     {/* <NavLink
       className="column-link column-link--transparent"
       to="/conversations"
@@ -83,33 +83,6 @@ const NavigationPanel = () => (
       <Icon className="column-link__icon" id="list-ul" fixedWidth />
       <FormattedMessage id="navigation_bar.lists" defaultMessage="Lists" />
     </NavLink> */}
-    <NavLink
-      className="column-link column-link--transparent"
-      to="/newsfeed-compare"
-    >
-      <Icon className="column-link__icon" id="columns" fixedWidth />
-      <FormattedMessage
-        id="navigation_bar.newsfeed-vergleich"
-        defaultMessage="Newsfeed Vergleich"
-      />
-    </NavLink>
-    <NavLink
-      className="column-link column-link--transparent"
-      to="/polarization"
-    >
-      <Icon className="column-link__icon" id="user-circle-o" fixedWidth />
-      <FormattedMessage
-        id="navigation_bar.polarisierung"
-        defaultMessage="Polarisierung erkunden"
-      />
-    </NavLink>
-    <NavLink className="column-link column-link--transparent" to="/awareness">
-      <Icon className="column-link__icon" id="lightbulb-o" fixedWidth />
-      <FormattedMessage
-        id="navigation_bar.awareness"
-        defaultMessage="Awareness"
-      />
-    </NavLink>
     {profile_directory && (
       <NavLink className="column-link column-link--transparent" to="/directory">
         <Icon className="column-link__icon" id="address-book-o" fixedWidth />
