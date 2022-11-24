@@ -73,14 +73,17 @@ class CommunityTimeline extends React.PureComponent {
     const { columnId, dispatch, onlyMedia } = this.props;
 
     if (columnId) {
+      console.log('handlePin', columnId);
       dispatch(removeColumn(columnId));
     } else {
+      console.log('handlePin: COMMUNITY');
       dispatch(addColumn('COMMUNITY', { other: { onlyMedia } }));
     }
   }
 
   handleMove = (dir) => {
     const { columnId, dispatch } = this.props;
+    console.log('handleMove', columnId);
     dispatch(moveColumn(columnId, dir));
   }
 
@@ -89,35 +92,39 @@ class CommunityTimeline extends React.PureComponent {
   }
 
   componentDidMount () {
-    const { dispatch, onlyMedia } = this.props;
+    const { dispatch, onlyMedia, selectedAlgorithm } = this.props;
     const topicArray = this.topicArray();
     const bubbleArray = this.bubbleArray();
-    dispatch(expandCommunityTimeline({ onlyMedia }));
-    dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
-    dispatch(expandDiverseSortedTimeline({ onlyMedia }));
-    dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
-    this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
+    console.log('componentDidMount');
+    if(selectedAlgorithm === 'default') dispatch(expandCommunityTimeline({ onlyMedia }));
+    if(selectedAlgorithm === 'newness') dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
+    if(selectedAlgorithm === 'diversity') dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+    if(selectedAlgorithm === 'user') dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
+    // this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
   }
 
   componentDidUpdate (prevProps) {
-    if (prevProps.onlyMedia !== this.props.onlyMedia) {
-      const { dispatch, onlyMedia } = this.props;
+    if (prevProps.selectedAlgorithm !== this.props.selectedAlgorithm
+      || prevProps.insideBubble !== this.props.insideBubble
+      || prevProps.outsideBubble !== this.props.outsideBubble) {
+      const { dispatch, onlyMedia, selectedAlgorithm } = this.props;
       const topicArray = this.topicArray();
       const bubbleArray = this.bubbleArray();
-      this.disconnect();
-      dispatch(expandCommunityTimeline({ onlyMedia }));
-      dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
-      dispatch(expandDiverseSortedTimeline({ onlyMedia }));
-      dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
-      this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
+      //   this.disconnect();
+      console.log('componentDidUpdate');
+      if(selectedAlgorithm === 'default') dispatch(expandCommunityTimeline({ onlyMedia }));
+      if(selectedAlgorithm === 'newness') dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
+      if(selectedAlgorithm === 'diversity') dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+      if(selectedAlgorithm === 'user') dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
+    //  this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
     }
   }
 
   componentWillUnmount () {
-    if (this.disconnect) {
-      this.disconnect();
-      this.disconnect = null;
-    }
+    // if (this.disconnect) {
+    //   this.disconnect();
+    //   this.disconnect = null;
+    // }
   }
 
   setRef = c => {
@@ -159,10 +166,11 @@ class CommunityTimeline extends React.PureComponent {
     const topicArray = this.topicArray();
     const bubbleArray = this.bubbleArray();
 
-    if(selectedAlgorithm === 'default') dispatch(expandCommunityTimeline({ onlyMedia }));
-    if(selectedAlgorithm === 'newness') dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
-    if(selectedAlgorithm === 'diversity') dispatch(expandDiverseSortedTimeline({ onlyMedia }));
-    if(selectedAlgorithm === 'user') dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
+    console.log('handleLoadMore');
+    if(selectedAlgorithm === 'default') dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
+    if(selectedAlgorithm === 'newness') dispatch(expandNewnessTimeline({ maxId, onlyMedia, topicArray }));
+    if(selectedAlgorithm === 'diversity') dispatch(expandDiverseSortedTimeline({ maxId, onlyMedia }));
+    if(selectedAlgorithm === 'user') dispatch(expandPersonalizedTimeline({ maxId, onlyMedia, bubbleArray }));
   }
 
   render () {
@@ -189,7 +197,7 @@ class CommunityTimeline extends React.PureComponent {
             scrollKey={`timeline-${columnId}`}
             timelineId={'personalized'}
             timelineMode={'personalized'}
-            onLoadMore={this.handleLoadMore}
+            //onLoadMore={this.handleLoadMore}
             emptyMessage={<FormattedMessage id='empty_column.personalized' defaultMessage='The personalized timeline is empty. You have to favourite posts to see something here.' />}
             bindToDocument={!multiColumn}
           /> : selectedAlgorithm === 'diversity' ?
@@ -197,13 +205,13 @@ class CommunityTimeline extends React.PureComponent {
               trackScroll={!pinned}
               scrollKey={`timeline-${columnId}`}
               timelineId={'diverse'}
-              onLoadMore={this.handleLoadMore}
+              //onLoadMore={this.handleLoadMore}
               emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
               bindToDocument={!multiColumn}
             /> : selectedAlgorithm ==='newness' ?
               <StatusListContainer
                 timelineId={'newness'}
-                onLoadMore={this.handleLoadMore}
+                //onLoadMore={this.handleLoadMore}
                 trackScroll={!pinned}
                 scrollKey={`timeline-${columnId}`}
                 emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up' />}
