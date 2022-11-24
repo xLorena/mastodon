@@ -88,36 +88,36 @@ class NewsfeedCompare extends React.PureComponent {
   }
 
   componentDidMount () {
-    const { dispatch, onlyMedia } = this.props;
+    const { dispatch, onlyMedia, selectedNewsfeedCompare } = this.props;
     const topicArray = this.topicArray();
     const bubbleArray = this.bubbleArray();
-    dispatch(expandCommunityTimeline({ onlyMedia }));
-    dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
-    dispatch(expandDiverseSortedTimeline({ onlyMedia }));
-    dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
-    this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
+    if(selectedNewsfeedCompare.includes('default')) dispatch(expandCommunityTimeline({ onlyMedia }));
+    if(selectedNewsfeedCompare.includes('newness')) dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
+    if(selectedNewsfeedCompare.includes('diversity')) dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+    if(selectedNewsfeedCompare.includes('user')) dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
+    //this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
   }
 
   componentDidUpdate (prevProps) {
-    if (prevProps.onlyMedia !== this.props.onlyMedia) {
-      const { dispatch, onlyMedia } = this.props;
+    if (prevProps.selectedNewsfeedCompare !== this.props.selectedNewsfeedCompare) {
+      const { dispatch, onlyMedia, selectedNewsfeedCompare } = this.props;
       const topicArray = this.topicArray();
       const bubbleArray = this.bubbleArray();
       this.disconnect();
-      dispatch(expandCommunityTimeline({ onlyMedia }));
-      dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
-      dispatch(expandDiverseSortedTimeline({ onlyMedia }));
-      dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
-      this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
+      if(selectedNewsfeedCompare.includes('default') && !prevProps.selectedNewsfeedCompare.includes('default')) dispatch(expandCommunityTimeline({ onlyMedia }));
+      if(selectedNewsfeedCompare.includes('newness') && !prevProps.selectedNewsfeedCompare.includes('newness')) dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
+      if(selectedNewsfeedCompare.includes('diversity') && !prevProps.selectedNewsfeedCompare.includes('diversity')) dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+      if(selectedNewsfeedCompare.includes('user') && !prevProps.selectedNewsfeedCompare.includes('user')) dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
+      //this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
     }
   }
 
-  componentWillUnmount () {
-    if (this.disconnect) {
-      this.disconnect();
-      this.disconnect = null;
-    }
-  }
+  // componentWillUnmount () {
+  //   if (this.disconnect) {
+  //     this.disconnect();
+  //     this.disconnect = null;
+  //   }
+  // }
 
   setRef = c => {
     this.column = c;
@@ -155,13 +155,13 @@ class NewsfeedCompare extends React.PureComponent {
 
   handleLoadMore = maxId => {
     const { dispatch, onlyMedia } = this.props;
-    const topicArray = this.topicArray();
-    const bubbleArray = this.bubbleArray();
+    // const topicArray = this.topicArray();
+    // const bubbleArray = this.bubbleArray();
 
-    dispatch(expandCommunityTimeline({ onlyMedia }));
-    dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
-    dispatch(expandDiverseSortedTimeline({ onlyMedia }));
-    dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
+    dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
+    // dispatch(expandNewnessTimeline({ maxId, onlyMedia, topicArray }));
+    // dispatch(expandDiverseSortedTimeline({ maxId, onlyMedia }));
+    // dispatch(expandPersonalizedTimeline({ maxId, onlyMedia, bubbleArray }));
   }
 
   // handleLoadMoreDiverse = maxId => {
@@ -206,7 +206,7 @@ class NewsfeedCompare extends React.PureComponent {
             trackScroll={!pinned}
             scrollKey={'community_timeline-2'}
             timelineId={'diverse'}
-            onLoadMore={this.handleLoadMore}
+            //onLoadMore={this.handleLoadMore}
             emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
             bindToDocument={!multiColumn}
           />
@@ -221,7 +221,7 @@ class NewsfeedCompare extends React.PureComponent {
           </div>
           <StatusListContainer
             timelineId={'newness'}
-            onLoadMore={this.handleLoadMore}
+            //onLoadMore={this.handleLoadMore}
             trackScroll={!pinned}
             scrollKey={`timeline-${columnId}`}
             emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up' />}
@@ -241,7 +241,7 @@ class NewsfeedCompare extends React.PureComponent {
             scrollKey={'timeline-personalized'}
             timelineId={'personalized'}
             timelineMode={'personalized'}
-            onLoadMore={this.handleLoadMore}
+            //onLoadMore={this.handleLoadMore}
             emptyMessage={<FormattedMessage id='empty_column.personalized' defaultMessage='The personalized timeline is empty. You have to favourite posts to see something here.' />}
             bindToDocument={!multiColumn}
           />
