@@ -85,6 +85,8 @@ const parseTags = (tags = {}, mode) => {
 
 export function expandTimeline(timelineId, path, params = {}, done = noOp) {
   return (dispatch, getState) => {
+    console.log('timeline is ', timelineId);
+    console.log('maxId is ', params.max_id);
     const timeline = getState().getIn(['timelines', timelineId], ImmutableMap());
     const isLoadingMore = !!params.max_id;
 
@@ -97,6 +99,8 @@ export function expandTimeline(timelineId, path, params = {}, done = noOp) {
       const a = timeline.getIn(['pendingItems', 0]);
       const b = timeline.getIn(['items', 0]);
 
+
+      console.log('timelineId is', timelineId);
       if (a && b && compareId(a, b) > 0) {
         params.since_id = a;
       } else {
@@ -130,9 +134,9 @@ export function expandTimeline(timelineId, path, params = {}, done = noOp) {
 export const expandHomeTimeline            = ({ maxId } = {}, done = noOp) => expandTimeline('home', '/api/v1/timelines/home', { max_id: maxId }, done);
 export const expandPublicTimeline          = ({ maxId, onlyMedia, onlyRemote } = {}, done = noOp) => expandTimeline(`public${onlyRemote ? ':remote' : ''}${onlyMedia ? ':media' : ''}`, '/api/v1/timelines/public', { remote: !!onlyRemote, max_id: maxId, only_media: !!onlyMedia }, done);
 export const expandCommunityTimeline       = ({ maxId, onlyMedia } = {}, done = noOp) => expandTimeline(`community${onlyMedia ? ':media' : ''}`, '/api/v1/timelines/public', { local: true, max_id: maxId, only_media: !!onlyMedia }, done);
-export const expandPersonalizedTimeline       = ({ maxId, onlyMedia, bubbleArray } = {}, done = noOp) => expandTimeline(`personalized${onlyMedia ? ':media' : ''}`, '/api/v1/timelines/public', { local: true, max_id: maxId, only_media: !!onlyMedia, topicArray: bubbleArray }, done);
-export const expandNewnessTimeline       = ({ maxId, onlyMedia, topicArray } = {}, done = noOp) => expandTimeline(`newness${onlyMedia ? ':media' : ''}`, '/api/v1/timelines/public', { local: true, max_id: maxId, only_media: !!onlyMedia, topicArray: topicArray }, done);
-export const expandDiverseSortedTimeline       = ({ maxId, onlyMedia } = {}, done = noOp) => expandTimeline(`diverse${onlyMedia ? ':media' : ''}`, '/api/v1/timelines/public', { diverse_sorted: true, local: true, max_id: maxId, only_media: !!onlyMedia }, done);
+export const expandPersonalizedTimeline       = ({ maxId, onlyMedia, bubbleArray } = {}, done = noOp) => expandTimeline(`personalized${onlyMedia ? ':media' : ''}`, '/api/v1/timelines/public', { local: true, max_id: maxId, only_media: !!onlyMedia, topicArray: bubbleArray, limit: 40 }, done);
+export const expandNewnessTimeline       = ({ maxId, onlyMedia, topicArray } = {}, done = noOp) => expandTimeline(`newness${onlyMedia ? ':media' : ''}`, '/api/v1/timelines/public', { local: true, max_id: maxId, only_media: !!onlyMedia, topicArray: topicArray, limit: 40 }, done);
+export const expandDiverseSortedTimeline       = ({ maxId, onlyMedia } = {}, done = noOp) => expandTimeline(`diverse${onlyMedia ? ':media' : ''}`, '/api/v1/timelines/public', { diverse_sorted: true, local: true, max_id: maxId, only_media: !!onlyMedia, limit: 40 }, done);
 export const expandAccountTimeline         = (accountId, { maxId, withReplies } = {}) => expandTimeline(`account:${accountId}${withReplies ? ':with_replies' : ''}`, `/api/v1/accounts/${accountId}/statuses`, { exclude_replies: !withReplies, max_id: maxId });
 export const expandAccountFeaturedTimeline = accountId => expandTimeline(`account:${accountId}:pinned`, `/api/v1/accounts/${accountId}/statuses`, { pinned: true });
 export const expandAccountMediaTimeline    = (accountId, { maxId } = {}) => expandTimeline(`account:${accountId}:media`, `/api/v1/accounts/${accountId}/statuses`, { max_id: maxId, only_media: true, limit: 40 });
