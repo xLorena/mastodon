@@ -14,6 +14,7 @@ export default class StatusList extends ImmutablePureComponent {
     scrollKey: PropTypes.string.isRequired,
     statusIds: ImmutablePropTypes.list.isRequired,
     featuredStatusIds: ImmutablePropTypes.list,
+    statuses: PropTypes.object,
     onLoadMore: PropTypes.func,
     onScrollToTop: PropTypes.func,
     onScroll: PropTypes.func,
@@ -35,9 +36,9 @@ export default class StatusList extends ImmutablePureComponent {
     trackScroll: true,
   };
 
-  UNSAFE_componentWillMount() {
-    this.props.fetchFavouritedStatuses();
-  }
+  // UNSAFE_componentWillMount() {
+  //   this.props.fetchFavouritedStatuses();
+  // }
 
   getFeaturedStatusCount = () => {
     return this.props.featuredStatusIds ? this.props.featuredStatusIds.size : 0;
@@ -62,7 +63,11 @@ export default class StatusList extends ImmutablePureComponent {
   }
 
   handleLoadOlder = debounce(() => {
-    this.props.onLoadMore(this.props.statusIds.size > 0 ? this.props.statusIds.last() : undefined);
+    if(this.props.timelineId === 'diverse' || this.props.timelineId === 'newness' || this.props.timelineId === 'personalized' ){
+      const oldestId = this.props.statuses.min((a, b) => Date(a.get('created_at')) - Date(b.get('created_at')));
+      console.log('oldestId is', this.props.statuses.keyOf(oldestId));
+      this.props.onLoadMore(this.props.statusIds.size > 0 ? this.props.statuses.keyOf(oldestId) : undefined);
+    } else  this.props.onLoadMore(this.props.statusIds.size > 0 ? this.props.statusIds.last() : undefined);
   }, 300, { leading: true })
 
   _selectChild (index, align_top) {
