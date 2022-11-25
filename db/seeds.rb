@@ -20,7 +20,7 @@ if Rails.env.development?
   counter = 0
   csv.each do |row|
     puts row.to_hash
-    account  = Account.where(username: "user#{counter}").first_or_initialize(username: "user#{counter}")
+    account  = Account.where(username: "user#{counter}").first_or_initialize(username: "user#{counter}", avatar_remote_url:"https://i.pravatar.cc/150?u=#{counter}")
     account.save(validate: false)
     User.where(email: "user#{counter}@#{domain}").first_or_initialize(email: "user#{counter}@#{domain}", password: 'mastodontest', password_confirmation: 'mastodontest', confirmed_at: Time.now.utc, account: account, agreement: true, approved: true).save!
     Follow.create(account_id: adminId, target_account_id: account.id, created_at: Time.now.utc + counter * 5, updated_at: Time.now.utc + counter * 5)
