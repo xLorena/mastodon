@@ -83,7 +83,7 @@ const NavigationPanel = () => (
       <Icon className="column-link__icon" id="list-ul" fixedWidth />
       <FormattedMessage id="navigation_bar.lists" defaultMessage="Lists" />
     </NavLink> */}
-    {profile_directory && (
+    {/* {profile_directory && (
       <NavLink className="column-link column-link--transparent" to="/directory">
         <Icon className="column-link__icon" id="address-book-o" fixedWidth />
         <FormattedMessage
@@ -91,13 +91,13 @@ const NavigationPanel = () => (
           defaultMessage="Profile directory"
         />
       </NavLink>
-    )}
+    )} */}
 
     <ListPanel />
 
     <hr />
 
-    <a
+    {/* <a
       className="column-link column-link--transparent"
       href="/settings/preferences"
     >
@@ -113,7 +113,7 @@ const NavigationPanel = () => (
         id="navigation_bar.follows_and_followers"
         defaultMessage="Follows and followers"
       />
-    </a>
+    </a> */}
 
     {showTrends && <div className="flex-spacer" />}
     {showTrends && <TrendsContainer />}
