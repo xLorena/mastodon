@@ -103,7 +103,7 @@ class NewsfeedCompare extends React.PureComponent {
       const { dispatch, onlyMedia, selectedNewsfeedCompare } = this.props;
       const topicArray = this.topicArray();
       const bubbleArray = this.bubbleArray();
-      this.disconnect();
+      //this.disconnect();
       if(selectedNewsfeedCompare.includes('default') && !prevProps.selectedNewsfeedCompare.includes('default')) dispatch(expandCommunityTimeline({ onlyMedia }));
       if(selectedNewsfeedCompare.includes('newness') && !prevProps.selectedNewsfeedCompare.includes('newness')) dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
       if(selectedNewsfeedCompare.includes('diversity') && !prevProps.selectedNewsfeedCompare.includes('diversity')) dispatch(expandDiverseSortedTimeline({ onlyMedia }));
