@@ -143,7 +143,8 @@ class BubbleList extends React.PureComponent {
 
     return (
       <div>
-        <div style={{}}>
+        <p>In deinem benutzerdefinierten Newsfeed erscheinen Inhalte, die ähnlich zu den Inhalten sind, die du bereits geliket hast. Entscheide per Mausklick welche Themen zusätzlich angezeigt oder rausgefiltert werden sollen. Alle Themen innerhalb der Blase werden angezeigt.</p>
+        <div style={{ padding: '0 100px' }}>
           {updateSentimentObj().map((status) =>
             status.value !== 0 || insideBubble.includes(status.key) ? (
               <></>
@@ -209,7 +210,7 @@ class BubbleList extends React.PureComponent {
             justifyContent: 'center',
             alignItems: 'center',
             margin: 'auto',
-            marginTop: 100,
+            marginTop: 10,
             backgroundColor: 'cadetblue',
             zIndex: 10,
             borderRadius: '50%',
