@@ -216,7 +216,7 @@
   "home.column_settings.newness_algo": "Neuheitsbasiert",
   "home.column_settings.diversity_algo":"Divers",
   "home.column_settings.default_algo": "Keine/ Chronologisch",
-  "home.column_settings.filteralgorithm": "Filterungsalgorithmus",
+  "home.column_settings.filteralgorithm": "Filteralgorithmus",
   "navigation_bar.newsfeed-vergleich": "Newsfeed Vergleich",
   "navigation_bar.polarisierung": "Polarisierung erkunden",
   "navigation_bar.awareness": "Awareness",
