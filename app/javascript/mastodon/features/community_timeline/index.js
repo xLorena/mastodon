@@ -176,13 +176,16 @@ class CommunityTimeline extends React.PureComponent {
   render () {
     const { intl, hasUnread, columnId, multiColumn, onlyMedia, selectedAlgorithm } = this.props;
     const pinned = !!columnId;
+    const renderAlgorithmString = {
+      'default': 'chronologisch', 'diversity': 'divers', 'newness': 'neuheitsbasiert', 'user': 'benutzerdefiniert',
+    };
 
     return (
       <Column bindToDocument={!multiColumn} ref={this.setRef} label={intl.formatMessage(messages.title)}>
         <ColumnHeader
           icon='home'
           active={hasUnread}
-          title={intl.formatMessage(messages.title)}
+          title={intl.formatMessage(messages.title) + ' - ' + renderAlgorithmString[selectedAlgorithm]}
           onPin={this.handlePin}
           onMove={this.handleMove}
           onClick={this.handleHeaderClick}
