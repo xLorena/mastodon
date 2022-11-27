@@ -29,30 +29,50 @@ class ColumnSettings extends React.PureComponent {
     onItemClick();
   };
 
+  state={
+    popup:'',
+    hover:'',
+  };
+  renderPopupDiverse = () =>{
+    return (<div className='column-settings__row--modal' ><p>
+      Der diverse Filteralgorithmus versucht die Inhalte, die in der Timeline angezeigt werden, möglichst divers zu gestalten. Hier wird die ,,Stimmung'' der Posts berechnet und in einer Reihenfolge angezeigt, in der die unterschiedlichen Stimmungen möglichst ausgeglichen sind.
+    </p></div>);
+  };
+  renderPopupNewness = () =>{
+    return (<div className='column-settings__row--modal' ><p>
+      Der neuheitsbasierte Filteralgorithmus versucht dir in der Timeline möglichst die Inhalte anzuzeigen, die für dich neu sind. Hier wird das Thema der Posts bestimmt und es werden nur die Posts mit den Themen angezeigt, die du noch nie favorisiert hast.
+    </p></div>);
+  };
+  renderPopupUser = () =>{
+    return (<div className='column-settings__row--modal' ><p>
+      Bei der benutzerdefinierten Filterung werden nur die Inhalte in deiner Timeline angezeigt, die dir möglicherweise gefallen. Dafür wird as Thema der Posts bestimmt und es werden nur die Posts mit Themen angezeigt, die du bereits favorisiert hast. Du kannst aber selber Einfluss nehmen, indem du Inhalte in deine Blase rein oder raus schiebst. Öffne dafür die benutzerdefinierte Filterung oder wechsle zum Reiter ,,Personalisierung erkunden".
+    </p></div>);
+  };
+  handleLeave=()=>{
+    return this.setState({ popup:'', hover: '' });
+  };
+  handleHoverDiverse=()=>{
+    return this.setState({ popup: this.renderPopupDiverse(), hover: 'diverse' });
+  };
+
+  handleHoverNewness=()=>{
+    return this.setState({ popup: this.renderPopupNewness(), hover:'newness' });
+  };
+
+  handleHoverUser=()=>{
+    return this.setState({ popup: this.renderPopupUser(), hover:'user' });
+  };
+
   render() {
     const { selectedAlgorithm, onAlgorithmChange } = this.props;
-    // const menu = [];
-    // menu.push(  <div style={{ width: 100, height: 100, backgroundColor: 'green' }} />);
 
     return (
-      <div>
+      <div className='community-timeline-settings'>
         <div className='column-settings__row'>
-          {/* We don't need this for our use case */}
-          {/* <SettingToggle
-            settings={settings}
-            settingPath={['other', 'onlyMedia']}
-            onChange={onChange}
-            label={
-              <FormattedMessage
-                id='community.column_settings.media_only'
-                defaultMessage='Media only'
-              />
-            }
-          /> */}
           <span className='column-settings__section'>
             <FormattedMessage
               id='home.column_settings.filteralgorithm'
-              defaultMessage='Filterungsalgorithmus'
+              defaultMessage='Filteralgorithmus'
             />
           </span>
 
@@ -72,12 +92,11 @@ class ColumnSettings extends React.PureComponent {
             />
           </div>
 
-          <div className='column-settings__row'>
+          <div className='column-settings__row' onMouseOver={this.handleHoverDiverse} onMouseLeave={this.handleLeave}>
             <SettingRadio
               prefix='home_timeline'
               settings={selectedAlgorithm}
               settingPath={['algorithm']}
-              // settingPath={['algorithm', 'diversity']}
               onChange={onAlgorithmChange}
               value='diversity'
               label={
@@ -87,13 +106,13 @@ class ColumnSettings extends React.PureComponent {
                 />
               }
             />
+            {this.state.hover ==='diverse' && this.state.popup}
           </div>
-          <div className='column-settings__row'>
+          <div className='column-settings__row' onMouseOver={this.handleHoverNewness} onMouseLeave={this.handleLeave}>
             <SettingRadio
               prefix='home_timeline'
               settingPath={['algorithm']}
               settings={selectedAlgorithm}
-              // settingPath={['algorithm', 'newness']}
               onChange={onAlgorithmChange}
               value='newness'
               label={
@@ -103,36 +122,28 @@ class ColumnSettings extends React.PureComponent {
                 />
               }
             />
+            {this.state.hover ==='newness' && this.state.popup}
           </div>
-          <div className='column-settings__row'>
+          <div className='column-settings__row' onMouseOver={this.handleHoverUser} onMouseLeave={this.handleLeave}>
             <SettingRadio
               prefix='home_timeline'
               settings={selectedAlgorithm}
               settingPath={['algorithm']}
-              // settingPath={['algorithm', 'user']}
               value='user'
               onChange={onAlgorithmChange}
-              //onChange={onChange}
               label={
                 <>
                   <FormattedMessage
                     id='home.column_settings.user_algo'
                     defaultMessage='Benutzerdefiniert'
                   />
-                  {/* <DropdownMenu renderItem={this.renderItem} scrollable onItemClick={this.handleItemClick}> */}
                   <button className='dropdown-menu__text-button' onClick={this.handleItemClick}>
                     <Icon id='caret-down' fixedWidth />
                   </button>
-                  {/* </DropdownMenu> */}
-                  {/* <DropdownMenuContainer
-                    //items={menu}
-                    icon='chevron-down'
-                    size={16}
-                    direction='right'
-                  /> */}
                 </>
               }
             />
+            {this.state.hover ==='user' && this.state.popup}
           </div>
         </div>
       </div>
