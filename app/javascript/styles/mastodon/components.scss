@@ -5115,6 +5115,33 @@ a.status-card.compact:hover {
   }
 }
 
+.community-timeline-settings{
+  display:flex;
+  z-index:999;
+ // align-content:center;
+  //justify-content:center;
+  .column-settings__row{
+  position:relative;
+  z-index:999;
+ // padding:0 80px;
+}
+  .column-settings__row--modal{
+  position:absolute;
+  box-sizing: border-box;
+  //overflow-y:scroll;
+ // max-height:150px;
+  left:100%;
+  width: 350px;
+  top: 0;
+  z-index:999;
+  background:rgb(51, 48, 48);
+  padding:10px;
+  border:1px solid grey;
+  box-shadow: 0 0 2px 2px grey;
+}
+}
+
+
 .actions-modal {
   .status {
     background: $white;
