@@ -34,7 +34,7 @@ class ColumnSettings extends React.PureComponent {
             label={
               <FormattedMessage
                 id='home.column_settings.default_compare'
-                defaultMessage='Keine/ Chronologisch'
+                defaultMessage='Keiner/ Chronologisch'
               />
             }
           />
