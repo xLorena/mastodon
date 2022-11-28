@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { injectIntl, FormattedMessage } from 'react-intl';
-//import SettingToggle from '../../notifications/components/setting_toggle';
 import SettingRadio from '../../notifications/components/setting_radio';
-//import DropdownMenuContainer from '../../../containers/dropdown_menu_container';
 import Icon from 'mastodon/components/icon';
 
 
@@ -35,7 +33,7 @@ class ColumnSettings extends React.PureComponent {
   };
   renderPopupDiverse = () =>{
     return (<div className='column-settings__row--modal' ><p>
-      Der diverse Filteralgorithmus versucht die Inhalte, die in der Timeline angezeigt werden, möglichst divers zu gestalten. Hier wird die ,,Stimmung'' der Posts berechnet und in einer Reihenfolge angezeigt, in der die unterschiedlichen Stimmungen möglichst ausgeglichen sind.
+      Der diverse Filteralgorithmus versucht die Inhalte, die in der Timeline angezeigt werden, möglichst ausgeglichen zu gestalten. Hier wird die ,,Stimmung'' der Posts berechnet und in einer Reihenfolge angezeigt, in der die unterschiedlichen Stimmungen gleichmäßig verteilt sind.
     </p></div>);
   };
   renderPopupNewness = () =>{
@@ -45,7 +43,7 @@ class ColumnSettings extends React.PureComponent {
   };
   renderPopupUser = () =>{
     return (<div className='column-settings__row--modal' ><p>
-      Bei der benutzerdefinierten Filterung werden nur die Inhalte in deiner Timeline angezeigt, die dir möglicherweise gefallen. Dafür wird as Thema der Posts bestimmt und es werden nur die Posts mit Themen angezeigt, die du bereits favorisiert hast. Du kannst aber selber Einfluss nehmen, indem du Inhalte in deine Blase rein oder raus schiebst. Öffne dafür die benutzerdefinierte Filterung oder wechsle zum Reiter ,,Personalisierung erkunden".
+      Bei der benutzerdefinierten Filterung werden nur die Inhalte in deiner Timeline angezeigt, die dir möglicherweise gefallen. Dafür wird das Thema der Posts bestimmt und es werden nur die Posts mit Themen angezeigt, die du bereits favorisiert hast. Du kannst aber selber Einfluss nehmen, indem du Inhalte in deine Blase rein oder raus schiebst. Öffne dafür die benutzerdefinierte Filterung oder wechsle zum Reiter ,,Personalisierung erkunden".
     </p></div>);
   };
   handleLeave=()=>{
@@ -69,7 +67,7 @@ class ColumnSettings extends React.PureComponent {
     return (
       <div className='community-timeline-settings'>
         <div className='column-settings__row'>
-          <span className='column-settings__section'>
+          <span className='column-settings__section' style={{ paddingTop: '15px' }}>
             <FormattedMessage
               id='home.column_settings.filteralgorithm'
               defaultMessage='Filteralgorithmus'
@@ -86,7 +84,7 @@ class ColumnSettings extends React.PureComponent {
               label={
                 <FormattedMessage
                   id='home.column_settings.default_algo'
-                  defaultMessage='Keine/ Chronologisch'
+                  defaultMessage='Keiner/ Chronologisch'
                 />
               }
             />
@@ -100,10 +98,13 @@ class ColumnSettings extends React.PureComponent {
               onChange={onAlgorithmChange}
               value='diversity'
               label={
-                <FormattedMessage
-                  id='home.column_settings.diversity_algo'
-                  defaultMessage='Divers'
-                />
+                <>
+                  <FormattedMessage
+                    id='home.column_settings.diversity_algo'
+                    defaultMessage='Divers'
+                  />
+                  <Icon id='info-circle' className='algorithm-icon' />
+                </>
               }
             />
             {this.state.hover ==='diverse' && this.state.popup}
@@ -116,10 +117,13 @@ class ColumnSettings extends React.PureComponent {
               onChange={onAlgorithmChange}
               value='newness'
               label={
-                <FormattedMessage
-                  id='home.column_settings.newness_algo'
-                  defaultMessage='Neuheitsbasiert'
-                />
+                <>
+                  <FormattedMessage
+                    id='home.column_settings.newness_algo'
+                    defaultMessage='Neuheitsbasiert'
+                  />
+                  <Icon id='info-circle' className='algorithm-icon' />
+                </>
               }
             />
             {this.state.hover ==='newness' && this.state.popup}
@@ -132,15 +136,16 @@ class ColumnSettings extends React.PureComponent {
               value='user'
               onChange={onAlgorithmChange}
               label={
-                <>
+                <span className='column-settings__row--clickable' onClick={this.handleItemClick}>
                   <FormattedMessage
                     id='home.column_settings.user_algo'
                     defaultMessage='Benutzerdefiniert'
                   />
+                  <Icon id='info-circle' className='algorithm-icon' />
                   <button className='dropdown-menu__text-button' onClick={this.handleItemClick}>
-                    <Icon id='caret-down' fixedWidth />
+                    <Icon id='caret-down' className='dropdown-icon' />
                   </button>
-                </>
+                </span>
               }
             />
             {this.state.hover ==='user' && this.state.popup}

@@ -3683,8 +3683,8 @@ a.status-card.compact:hover {
 
 .column-header__collapsible {
   max-height: 70vh;
-  overflow: hidden;
-  overflow-y: auto;
+  //overflow: hidden;
+  //overflow-y: auto;
   color: $darker-text-color;
   transition: max-height 150ms ease-in-out, opacity 300ms linear;
   opacity: 1;
@@ -3711,7 +3711,7 @@ a.status-card.compact:hover {
 
 .column-header__collapsible-inner {
   background: lighten($ui-base-color, 8%);
-  padding: 15px;
+  padding: 0px 15px;
 }
 
 .column-header__setting-btn {
@@ -5103,19 +5103,60 @@ a.status-card.compact:hover {
   }
 }
 
-.confirmation-modal--filter-bubble {
-  width: 50vw;
-  overflow: scroll;
-  //height: 90vh;
-  .outside-bubble:first-child {
+.polarization{
+  .bubble-list{
+    padding: 10px 15vw;
+  }
+  .outside-bubble:nth-last-of-type(2) {
+    margin-top: 60px !important;
+  }
+  .outside-bubble:nth-last-of-type(3) {
+    margin-top: 40px !important;
+  }
+  .outside-bubble:nth-of-type(2) {
+    margin-top: 60px !important;
+  }
+  .outside-bubble:nth-of-type(3) {
     margin-top: 40px !important;
   }
   .outside-bubble:last-child {
-    margin-top: 40px !important;
+    margin-top: 100px !important;
+  }
+   .outside-bubble:first-child {
+    margin-top: 100px !important;
   }
 }
 
-.community-timeline-settings{
+.confirmation-modal--filter-bubble {
+  width: 50vw;
+ // overflow: scroll;
+  .outside-bubble:nth-last-of-type(2) {
+    margin-top: 60px !important;
+  }
+  .outside-bubble:nth-last-of-type(3) {
+    margin-top: 40px !important;
+  }
+  .outside-bubble:nth-of-type(2) {
+    margin-top: 60px !important;
+  }
+  .outside-bubble:nth-of-type(3) {
+    margin-top: 40px !important;
+  }
+  .outside-bubble:last-child {
+    margin-top: 100px !important;
+  }
+   .outside-bubble:first-child {
+    margin-top: 100px !important;
+  }
+  .confirmation-modal__action-bar {
+    position: fixed;
+    bottom: 0;
+    width: 50vw;
+    padding: 10px 0;
+  }
+}
+
+.community-timeline-settings, .newsfeed-compare-settings{
   display:flex;
   z-index:999;
  // align-content:center;
@@ -5124,6 +5165,9 @@ a.status-card.compact:hover {
   position:relative;
   z-index:999;
  // padding:0 80px;
+}
+.column-settings__row--clickable{
+cursor: pointer;
 }
   .column-settings__row--modal{
   position:absolute;
@@ -5139,8 +5183,18 @@ a.status-card.compact:hover {
   border:1px solid grey;
   box-shadow: 0 0 2px 2px grey;
 }
+.algorithm-icon{
+  margin-left: 5px;
+  font-size: 1rem;
 }
-
+.dropdown-icon{
+  margin-left: 5px;
+  font-size: 1.25rem;
+}
+}
+.newsfeed-compare-settings{
+  flex-direction: column;
+}
 
 .actions-modal {
   .status {
@@ -5186,6 +5240,7 @@ a.status-card.compact:hover {
     flex: 0 0 auto;
   }
 }
+
 
 .boost-modal__status-header {
   font-size: 15px;
