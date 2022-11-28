@@ -27,7 +27,7 @@ const initialState = ImmutableMap({
 
   algorithm: 'default',
 
-  newsfeedCompare: ImmutableList(['default', 'diversity']),
+  newsfeedCompare: ImmutableList([]),
 
   personalization: ImmutableMap({
     insideBubble: ImmutableList([]),
