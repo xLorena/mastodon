@@ -142,9 +142,9 @@ class BubbleList extends React.PureComponent {
     };
 
     return (
-      <div>
-        <p>In deinem benutzerdefinierten Newsfeed erscheinen Inhalte, die ähnlich zu den Inhalten sind, die du bereits geliket hast. Entscheide per Mausklick welche Themen zusätzlich angezeigt oder rausgefiltert werden sollen. Alle Themen innerhalb der Blase werden angezeigt.</p>
-        <div style={{ padding: '0 100px' }}>
+      <div className='bubble-list'>
+        <p style={{ fontSize: '0.9rem', paddingTop: '5px', textAlign:'center' }}>In deinem benutzerdefinierten Newsfeed erscheinen Inhalte, die ähnlich zu den Inhalten sind, die du bereits geliket hast. Entscheide per Mausklick welche Themen zusätzlich angezeigt oder rausgefiltert werden sollen. Alle Themen innerhalb der Blase werden angezeigt.</p>
+        <div style={{ padding: '0', display:'flex', justifyContent:'center' }}>
           {updateSentimentObj().map((status) =>
             status.value !== 0 || insideBubble.includes(status.key) ? (
               <></>
@@ -156,8 +156,8 @@ class BubbleList extends React.PureComponent {
                 style={{
                   borderRadius: '50%',
                   border: '3px solid tan',
-                  width: 60,
-                  height: 60,
+                  width: 80,
+                  height: 80,
                   backgroundColor: 'wheat',
                   display: 'flex',
                   justifyContent: 'center',
@@ -167,7 +167,7 @@ class BubbleList extends React.PureComponent {
                   cursor: 'pointer',
                 }}
               >
-                <p style={{ color: 'black', fontSize: 14 }}>
+                <p style={{ color: 'black', fontSize: 14, textAlign:'center' }}>
                   {sentimentMap(status.key)}
                 </p>
               </div>
@@ -183,8 +183,8 @@ class BubbleList extends React.PureComponent {
                   borderRadius: '50%',
                   border: '10px solid powderblue',
                   boxShadow: '0px 0px 0px 3px teal',
-                  width: 60,
-                  height: 60,
+                  width: 80,
+                  height: 80,
                   // width: 50 * calculateSize(this.updateSentimentObject()[key]) + 60,
                   // height: 50 * calculateSize(this.updateSentimentObject()[key]) + 60,
                   backgroundColor: 'lightblue',
@@ -195,7 +195,7 @@ class BubbleList extends React.PureComponent {
                   cursor: 'pointer',
                 }}
               >
-                <p style={{ color: 'black', fontSize: 14 }}>
+                <p style={{ color: 'black', fontSize: 14, textAlign:'center' }}>
                   {sentimentMap(key)}
                 </p>
               </div>
@@ -210,12 +210,12 @@ class BubbleList extends React.PureComponent {
             justifyContent: 'center',
             alignItems: 'center',
             margin: 'auto',
-            marginTop: 10,
+            marginTop: 0,
             backgroundColor: 'cadetblue',
             zIndex: 10,
             borderRadius: '50%',
-            width: '60vh',
-            height: '60vh',
+            width: '65vh',
+            height: '65vh',
             padding: 10,
             border: '10px solid powderblue',
             boxShadow: '0px 0px 0px 3px teal',
@@ -231,8 +231,8 @@ class BubbleList extends React.PureComponent {
                   borderRadius: '50%',
                   border: '10px solid powderblue',
                   boxShadow: '0px 0px 0px 3px teal',
-                  width: 50 * calculateSize(status.value) + 60,
-                  height: 50 * calculateSize(status.value) + 60,
+                  width: 50 * calculateSize(status.value) + 80,
+                  height: 50 * calculateSize(status.value) + 80,
                   backgroundColor: 'lightblue',
                   display: 'flex',
                   justifyContent: 'center',
@@ -241,7 +241,7 @@ class BubbleList extends React.PureComponent {
                   cursor: 'pointer',
                 }}
               >
-                <p style={{ color: 'black', fontSize: 14 }}>
+                <p style={{ color: 'black', fontSize: 14, textAlign:'center' }}>
                   {sentimentMap(status.key)}
                 </p>
               </div>
@@ -258,8 +258,8 @@ class BubbleList extends React.PureComponent {
                 style={{
                   borderRadius: '50%',
                   border: '3px solid tan',
-                  width: 60,
-                  height: 60,
+                  width: 80,
+                  height: 80,
                   backgroundColor: 'wheat',
                   display: 'flex',
                   justifyContent: 'center',
@@ -269,7 +269,7 @@ class BubbleList extends React.PureComponent {
                   cursor: 'pointer',
                 }}
               >
-                <p style={{ color: 'black', fontSize: 14 }}>
+                <p style={{ color: 'black', fontSize: 14, textAlign:'center' }}>
                   {sentimentMap(key)}
                 </p>
               </div>
