@@ -26,6 +26,7 @@ const mapStateToProps = (state, { columnId }) => {
   const insideBubble = state.getIn(['settings', 'personalization', 'insideBubble']);
   const outsideBubble = state.getIn(['settings', 'personalization', 'outsideBubble']);
   const statuses = state.get('statuses');
+  const timelines = state.get('timelines');
 
 
   return {
@@ -36,6 +37,7 @@ const mapStateToProps = (state, { columnId }) => {
     insideBubble,
     outsideBubble,
     statuses,
+    timelines,
   };
 };
 
@@ -63,6 +65,7 @@ class CommunityTimeline extends React.PureComponent {
     favourites: PropTypes.object,
     insideBubble: PropTypes.object,
     outsideBubble: PropTypes.object,
+    timelines: PropTypes.object,
   };
 
   UNSAFE_componentWillMount() {
@@ -100,31 +103,24 @@ class CommunityTimeline extends React.PureComponent {
     if(selectedAlgorithm === 'newness') dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
     if(selectedAlgorithm === 'diversity') dispatch(expandDiverseSortedTimeline({ onlyMedia }));
     if(selectedAlgorithm === 'user') dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
-    // this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
   }
 
   componentDidUpdate (prevProps) {
+    const { dispatch, onlyMedia, selectedAlgorithm } = this.props;
+    const topicArray = this.topicArray();
+    const bubbleArray = this.bubbleArray();
     if (prevProps.selectedAlgorithm !== this.props.selectedAlgorithm
       || prevProps.insideBubble !== this.props.insideBubble
       || prevProps.outsideBubble !== this.props.outsideBubble) {
-      const { dispatch, onlyMedia, selectedAlgorithm } = this.props;
-      const topicArray = this.topicArray();
-      const bubbleArray = this.bubbleArray();
-      //   this.disconnect();
       console.log('componentDidUpdate');
       if(selectedAlgorithm === 'default') dispatch(expandCommunityTimeline({ onlyMedia }));
       if(selectedAlgorithm === 'newness') dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
       if(selectedAlgorithm === 'diversity') dispatch(expandDiverseSortedTimeline({ onlyMedia }));
       if(selectedAlgorithm === 'user') dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
-    //  this.disconnect = dispatch(connectCommunityStream({ onlyMedia }));
     }
-  }
-
-  componentWillUnmount () {
-    // if (this.disconnect) {
-    //   this.disconnect();
-    //   this.disconnect = null;
-    // }
+    if(this.props.timelines.get('newness') && this.props.timelines.getIn(['newness', 'items']).size === 0 && this.props.timelines.getIn(['newness', 'hasMore'])) dispatch(expandNewnessTimeline({ onlyMedia, topicArray }));
+    if(this.props.timelines.get('diverse') && this.props.timelines.getIn(['diverse', 'items']).size === 0 && this.props.timelines.getIn(['diverse', 'hasMore'])) dispatch(expandDiverseSortedTimeline({ onlyMedia }));
+    if(this.props.timelines.get('personalized') && this.props.timelines.getIn(['personalized', 'items']).size === 0 && this.props.timelines.getIn(['personalized', 'hasMore'])) dispatch(expandPersonalizedTimeline({ onlyMedia, bubbleArray }));
   }
 
   setRef = c => {
