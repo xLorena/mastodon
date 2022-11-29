@@ -105,7 +105,7 @@ class AwarenessInformation extends ImmutablePureComponent {
               Dafür sammeln diese Webseiten Daten wie den Standort, die Suchhistorie oder das Klickverhalten der Person.
               Durch das Weglassen von Informationen, die nicht den Ansichten und Interessen des Benutzers entsprechen, wird dieser zwar weniger durch gegenteilige Ansichten belastet, aber auch in einer Informations-„Blase“ intellektuell isoliert.
               Dies kann eine Gefahr für die Demokratie sein, denn in einer freien Gesellschaft ist ein öffentlicher Diskurs wichtig.
-              Diesen Effekt kann es in sozialen Netzwerken und auch in Suchmaschinen geben.'
+              Diesen Effekt kann es in sozialen Netzwerken und auch in Suchmaschinen geben.
             </p>
           </article>
           <article>
@@ -117,7 +117,7 @@ class AwarenessInformation extends ImmutablePureComponent {
               Du kannst auch versuchen darauf zu achten, unterschiedliche Inhalte zu liken, um den Algorithmus für dich „umzutrainieren“.
               Aber auch die Plattformen selber stehen in der Verantwortung ihre Algorithmen auf solche Effekte zu überprüfen und stets weiterzuentwickeln.
               Hast du das Gefühl, eine Plattform handelt nicht ethisch, teile deine Meinung öffentlich oder wechsle zu einer Plattform, bei der du ein besseres Gefühl hast.
-              Es gibt auch soziale Netzwerken, bei denen du dich nicht auf eine Plattform festlegen musst. Dieses Konzept nennt sich „dezentralisiert“ und funktioniert so wie das E-Mail-System.
+              Es gibt auch soziale Netzwerke, bei denen du dich nicht auf eine Plattform festlegen musst. Dieses Konzept nennt sich „dezentralisiert“ und funktioniert so wie das E-Mail-System.
               Du kannst dir dort einen Account auf einem Server machen und trotzdem mit allen anderen Accounts befreundet sein, die auf anderen Servern im dezentralisierten Netzwerk sind.
               Ein Beispiel dafür ist „Mastodon“.
             </p>
