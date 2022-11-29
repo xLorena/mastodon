@@ -387,16 +387,9 @@ class Status extends ImmutablePureComponent {
             </div>
 
             <StatusContent status={status} onClick={this.handleClick} expanded={!status.get('hidden')} showThread={showThread} onExpandedToggle={this.handleExpandedToggle} collapsable onCollapsedToggle={this.handleCollapsedToggle} />
-            {/* <h3>{'AccountID: ' + status.getIn(['account', 'id'])}</h3>
-            <h3>{'Visibility: ' + status.get('visibility')}</h3> */}
-            <h3>{'Sentiment class: ' + sentimentMap(status.get('sentiment_score'))}</h3>
-            <h3>{'Polarization score: ' + status.get('polarization_score').slice(0, 4)}</h3>
-            {/* <h3>{JSON.stringify(insideBubble) + ' / ' + JSON.stringify(outsideBubble)}</h3> */}
-            {/* <h3>{'Favourites:' + favourites}</h3> */}
-            {/* <h3>{'statuses: ' + statuses}</h3> */}
-            {/* <h3>{JSON.stringify(algorithm === 'user')}</h3> */}
+            <h3>{'Thema: ' + sentimentMap(status.get('sentiment_score'))}</h3>
+            <h3>{'Stimmung: ' + status.get('polarization_score').slice(0, 4)}</h3>
             {media}
-
             <StatusActionBar scrollKey={scrollKey} status={status} account={account} {...other} />
           </div>
         </div>
@@ -413,17 +406,6 @@ class Status extends ImmutablePureComponent {
         </HotKeys>
       );
     };
-
-    // const renderHiddenByPersonalization = () => {
-    //   return (
-    //     <HotKeys handlers={handlers}>
-    //       <div ref={this.handleRef} className={classNames('status__wrapper', { focusable: !this.props.muted })} tabIndex='0'>
-    //         {/* <span>{status.getIn(['account', 'display_name']) || status.getIn(['account', 'username'])}</span>
-    //         <span>{status.get('content')}</span> */}
-    //       </div>
-    //     </HotKeys>
-    //   );
-    // };
 
     if (hidden) {
       renderHidden();
@@ -571,29 +553,6 @@ class Status extends ImmutablePureComponent {
     };
 
     const visibilityIcon = visibilityIconInfo[status.get('visibility')];
-
-    // const isInFavourites = () => {
-    //   var found = false;
-    //   var sentimentScore;
-    //   favourites.forEach((statusId) => {
-    //     sentimentScore = statuses.getIn([statusId, 'sentiment_score']);
-    //     if (status.get('sentimentScore') === sentimentScore) {
-    //       found = true;
-    //       return false;
-    //     }
-    //     return true;
-    //     // found = statuses.hasIn([statusId, 'sentiment_score'])
-    //   });
-    //   return found;
-    // };
-
-
-    // if (algorithm === 'user'){
-    //   if(outsideBubble.includes(status.get('sentiment_score'))) return renderHiddenByPersonalization();
-    //   if(insideBubble.includes(status.get('sentiment_score'))) return renderStatus();
-    //   //if(!isInFavourites()) return renderHiddenByPersonalization();
-    //   //else return renderHiddenByPersonalization();
-    // }
 
     return renderStatus();
   }
