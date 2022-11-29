@@ -86,7 +86,7 @@ class AwarenessInformation extends ImmutablePureComponent {
       >
         <ColumnHeader
           icon='lightbulb-o'
-          title={'Awareness'}
+          title={'Filterblasen erklärt'}
           onPin={this.handlePin}
           onMove={this.handleMove}
           onClick={this.handleHeaderClick}

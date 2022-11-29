@@ -46,7 +46,7 @@ const NavigationPanel = (props) => (
       <span className={props.showLabelOnHover ? 'show-on-hover' : null}>
         <FormattedMessage
           id="navigation_bar.polarisierung"
-          defaultMessage="Polarisierung erkunden"
+          defaultMessage="Filterblase erkunden"
         />
       </span>
     </NavLink>
@@ -55,7 +55,7 @@ const NavigationPanel = (props) => (
       <span className={props.showLabelOnHover ? 'show-on-hover' : null}>
         <FormattedMessage
           id="navigation_bar.awareness"
-          defaultMessage="Awareness"
+          defaultMessage="Filterblasen erklärt"
         />
       </span>
     </NavLink>

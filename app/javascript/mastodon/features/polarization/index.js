@@ -142,7 +142,7 @@ class Polarization extends React.PureComponent {
       >
         <ColumnHeader
           icon='star'
-          title={'Polarisierung erkunden'}
+          title={'Filterblase erkunden'}
           onPin={this.handlePin}
           onMove={this.handleMove}
           onClick={this.handleHeaderClick}
