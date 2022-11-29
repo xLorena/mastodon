@@ -13,6 +13,11 @@ if Rails.env.development?
   admin.save(validate: false)
   adminId = admin.id
   User.where(email: "admin@#{domain}").first_or_initialize(email: "admin@#{domain}", password: 'mastodonadmin', password_confirmation: 'mastodonadmin', confirmed_at: Time.now.utc, admin: true, account: admin, agreement: true, approved: true).save!
+  #create testuser
+  du  = Account.where(username: 'du').first_or_initialize(username: 'du')
+  du.save(validate: false)
+  duId = du.id
+  User.where(email: "du@#{domain}").first_or_initialize(email: "du@#{domain}", password: 'mastodondu', password_confirmation: 'mastodondu', confirmed_at: Time.now.utc, account: du, agreement: true, approved: true).save!
 
 
   csv_text = File.read(Rails.root.join('datasets', 'covid', 'test4.0.csv'))
@@ -23,7 +28,7 @@ if Rails.env.development?
     account  = Account.where(username: "user#{counter}").first_or_initialize(username: "user#{counter}", avatar_remote_url:"https://i.pravatar.cc/150?u=#{counter}")
     account.save(validate: false)
     User.where(email: "user#{counter}@#{domain}").first_or_initialize(email: "user#{counter}@#{domain}", password: 'mastodontest', password_confirmation: 'mastodontest', confirmed_at: Time.now.utc, account: account, agreement: true, approved: true).save!
-    Follow.create(account_id: adminId, target_account_id: account.id, created_at: Time.now.utc + counter * 5, updated_at: Time.now.utc + counter * 5)
+    Follow.create(account_id: duId, target_account_id: account.id, created_at: Time.now.utc + counter * 5, updated_at: Time.now.utc + counter * 5)
     Status.create(account_id: account.id, text: row['Tweet'], created_at: Time.now.utc + counter * 10, updated_at: Time.now.utc + counter * 10, local: true, sentiment_score: row['Labels'].to_f, polarization_score: row['Score'].to_f )
     counter = counter + 1
   end
