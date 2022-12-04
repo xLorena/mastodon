@@ -3,11 +3,6 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { addToSettingBubbleList, removeFromSettingBubbleList } from '../../actions/settings';
-//import StatusListContainer from '../ui/containers/status_list_container';
-// import {
-//   expandCommunityTimeline,
-//   expandDiverseSortedTimeline,
-// } from '../../actions/timelines';
 import { fetchFavouritedStatuses } from '../../actions/favourites';
 
 const mapStateToProps = (state) => {
@@ -54,25 +49,18 @@ class BubbleList extends React.PureComponent {
 
   onBubbleClickOutside = (value) => {
     this.props.dispatch(addToSettingBubbleList('insideBubble', value));
-    // this.props.dispatch({
-    //   type: 'RESET',
-    // });
-    console.log('bubble clicked outside');
   };
 
   onBubbleClickInside = (value) => {
     this.props.dispatch(addToSettingBubbleList('outsideBubble', value));
-    console.log('bubble clicked inside');
   };
 
   onSelectedBubbleClickInside = (value) => {
     this.props.dispatch(removeFromSettingBubbleList('insideBubble', value));
-    console.log('selected bubble clicked inside');
   }
 
   onSelectedBubbleClickOutside = (value) => {
     this.props.dispatch(removeFromSettingBubbleList('outsideBubble', value));
-    console.log('selected bubble clicked outside');
   }
 
 
@@ -97,17 +85,23 @@ class BubbleList extends React.PureComponent {
       var item;
       var index;
       var sentimentScore;
+      //for every element in favorites
       favorites.forEach((statusId) => {
+        //get the sentiment score of the status (we have to get it from statuses because in favorites only the ids are saved)
         sentimentScore = statuses.getIn([statusId, 'sentiment_score']);
+        //get the item of the sentimentObject whith the same key as the sentiment-score
         item = sentimentObj.find((elem) => elem.key === sentimentScore);
         if (item) {
+          //get the index of the found item
           index = sentimentObj.indexOf(item);
+          //increase the value of the entry with the found sentiment-score
           sentimentObj[index].value = sentimentObj[index].value + 1.0;
         }
       });
       return sentimentObj;
     };
 
+    //map sentiment-score to according Emotion
     const sentimentMap = (sentimentScore) => {
       switch (sentimentScore) {
       case '0.0':
@@ -143,105 +137,59 @@ class BubbleList extends React.PureComponent {
 
     return (
       <div className='bubble-list'>
-        <p style={{ fontSize: '0.9rem', paddingTop: '5px', textAlign:'center' }}>In deinem benutzerdefinierten Newsfeed erscheinen Inhalte, die ähnlich zu den Inhalten sind, die du bereits geliket hast. Entscheide per Mausklick welche Themen zusätzlich angezeigt oder rausgefiltert werden sollen. Alle Themen innerhalb der Blase werden angezeigt.</p>
-        <div style={{ padding: '0', display:'flex', justifyContent:'center' }}>
+        <p className='headline'>In deinem benutzerdefinierten Newsfeed erscheinen Inhalte, die ähnlich zu den Inhalten sind, die du bereits geliket hast. Entscheide per Mausklick welche Themen zusätzlich angezeigt oder rausgefiltert werden sollen. Alle Themen innerhalb der Blase werden angezeigt.</p>
+        <div className='wrapper'>
+          {/* loop through every sentiment class */}
           {updateSentimentObj().map((status) =>
+          /* don't render it on the outside of the bubble when it's in the favorite list or in the insideBubble array */
             status.value !== 0 || insideBubble.includes(status.key) ? (
               <></>
             ) : (
               <div
                 key={status.key}
+                // on click add to insideBubble array
                 onClick={() => this.onBubbleClickOutside(status.key)}
-                className='outside-bubble'
-                style={{
-                  borderRadius: '50%',
-                  border: '3px solid tan',
-                  width: 80,
-                  height: 80,
-                  backgroundColor: 'wheat',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  margin: 15,
-                  float: 'left',
-                  cursor: 'pointer',
-                }}
+                className='outside-bubble not-favorites'
               >
-                <p style={{ color: 'black', fontSize: 14, textAlign:'center' }}>
+                <p className='bubble-text'>
+                  {/* map sentiment score to the according sentiment word */}
                   {sentimentMap(status.key)}
                 </p>
               </div>
             ),
           )}
+          {/* render all entries in the outsideBubble array on the outside of the bubble*/}
           {outsideBubble.map((key, index) =>
             (
               <div
                 key={index}
+                // on click remove from outsideBubble array
                 onClick={() => this.onSelectedBubbleClickOutside(key)}
-                className='outside-bubble'
-                style={{
-                  borderRadius: '50%',
-                  border: '10px solid powderblue',
-                  boxShadow: '0px 0px 0px 3px teal',
-                  width: 80,
-                  height: 80,
-                  // width: 50 * calculateSize(this.updateSentimentObject()[key]) + 60,
-                  // height: 50 * calculateSize(this.updateSentimentObject()[key]) + 60,
-                  backgroundColor: 'lightblue',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  margin: 15,
-                  cursor: 'pointer',
-                }}
+                className='outside-bubble outside-array'
               >
-                <p style={{ color: 'black', fontSize: 14, textAlign:'center' }}>
+                <p className='bubble-text'>
                   {sentimentMap(key)}
                 </p>
               </div>
             ),
           )}
         </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: 'auto',
-            marginTop: 0,
-            backgroundColor: 'cadetblue',
-            zIndex: 10,
-            borderRadius: '50%',
-            width: '65vh',
-            height: '65vh',
-            padding: 10,
-            border: '10px solid powderblue',
-            boxShadow: '0px 0px 0px 3px teal',
-          }}
-        >
+        {/* render the big bubble*/}
+        <div className='big-bubble'>
+          {/* render inside the bubble: all entries of favorites that are not in the outsideBubble array */}
           {updateSentimentObj().map((status) =>
             status.value !== 0 && !outsideBubble.includes(status.key) ? (
               <div
+                // on click add to outsideBubble array
                 onClick={() => this.onBubbleClickInside(status.key)}
                 key={status.key}
-                className='inside-bubble'
+                className='inside-bubble favorites'
                 style={{
-                  borderRadius: '50%',
-                  border: '10px solid powderblue',
-                  boxShadow: '0px 0px 0px 3px teal',
                   width: 50 * calculateSize(status.value) + 80,
                   height: 50 * calculateSize(status.value) + 80,
-                  backgroundColor: 'lightblue',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  margin: 15,
-                  cursor: 'pointer',
                 }}
               >
-                <p style={{ color: 'black', fontSize: 14, textAlign:'center' }}>
+                <p className='bubble-text'>
                   {sentimentMap(status.key)}
                 </p>
               </div>
@@ -249,27 +197,16 @@ class BubbleList extends React.PureComponent {
               <></>
             ),
           )}
+          {/* render all entries in the insideBubble array inside of the bubble*/}
           {insideBubble.map((key, index) =>
             (
               <div
                 key={index}
+                // on click remove from insideBubble array
                 onClick={() => this.onSelectedBubbleClickInside(key)}
-                className='outside-bubble'
-                style={{
-                  borderRadius: '50%',
-                  border: '3px solid tan',
-                  width: 80,
-                  height: 80,
-                  backgroundColor: 'wheat',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  margin: 15,
-                  float: 'left',
-                  cursor: 'pointer',
-                }}
+                className='inside-bubble inside-array'
               >
-                <p style={{ color: 'black', fontSize: 14, textAlign:'center' }}>
+                <p className='bubble-text'>
                   {sentimentMap(key)}
                 </p>
               </div>
