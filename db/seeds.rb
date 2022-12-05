@@ -32,34 +32,41 @@ if Rails.env.development?
   counter = 0
   #loop through parsed object
   csv.each do |row|
-    #create Account for each column and save to database
+
+    #create Account for each row
     account  = Account.where(username: "user#{counter}").first_or_initialize(
       username: "user#{counter}", 
       avatar_remote_url:"https://i.pravatar.cc/150?u=#{counter}")
+    #save to database
     account.save(validate: false)
-    #create User for each column and save to database
+
+    #create User for each row
     User.where(email: "user#{counter}@#{domain}").first_or_initialize(
       email: "user#{counter}@#{domain}", password: 'mastodontest', 
       password_confirmation: 'mastodontest', confirmed_at: Time.now.utc, 
       account: account, agreement: true, approved: true
+      #save to database
       ).save!
-    #create Follow for each column
-    #with the testuser (you) following the newly created account
-    #and save to database
+
+    #create Follow for each row and save to database
     Follow.create(
+      #with the testuser (you) following the newly created account
       account_id: youId, 
       target_account_id: account.id, 
       created_at: Time.now.utc + counter * 5, 
       updated_at: Time.now.utc + counter * 5)
-    #create Status for each column with newly created account as account_id
-    #set content of the row 'Tweet' as text, row 'Labels' as sentiment_score
-    #and row 'Score' as polarization_score, converting both to float
-    #and save to database
+      
+    #create Status for each row and save to database
     Status.create(
-      account_id: account.id, text: row['Tweet'], 
+      #with the account that was created in this loop as account_id
+      account_id: account.id,
+      #set content of column 'Tweet' as text, 
+      text: row['Tweet'], 
       created_at: Time.now.utc + counter * 10, 
-      updated_at: Time.now.utc + counter * 10, 
-      local: true, sentiment_score: row['Labels'].to_f, 
+      updated_at: Time.now.utc + counter * 10,
+      #set content of column 'Labels' as sentiment_score, converting to float
+      local: true, sentiment_score: row['Labels'].to_f,
+      #set content of column 'Score' as polarization_score, converting to float
       polarization_score: row['Score'].to_f )
     counter = counter + 1
   end

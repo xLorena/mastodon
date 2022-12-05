@@ -141,7 +141,8 @@ class BubbleList extends React.PureComponent {
         <div className='wrapper'>
           {/* loop through every sentiment class */}
           {updateSentimentObj().map((status) =>
-          /* don't render it on the outside of the bubble when it's in the favorite list or in the insideBubble array */
+          /* don't render it on the outside of the bubble when it's in the favorite list
+           or in the insideBubble array */
             status.value !== 0 || insideBubble.includes(status.key) ? (
               <></>
             ) : (
@@ -176,7 +177,8 @@ class BubbleList extends React.PureComponent {
         </div>
         {/* render the big bubble*/}
         <div className='big-bubble'>
-          {/* render inside the bubble: all entries of favorites that are not in the outsideBubble array */}
+          {/* render inside the bubble: 
+          all entries of favorites that are not in the outsideBubble array */}
           {updateSentimentObj().map((status) =>
             status.value !== 0 && !outsideBubble.includes(status.key) ? (
               <div
@@ -185,6 +187,7 @@ class BubbleList extends React.PureComponent {
                 key={status.key}
                 className='inside-bubble favorites'
                 style={{
+                  // calculate size according to amount of entries in favorites
                   width: 50 * calculateSize(status.value) + 80,
                   height: 50 * calculateSize(status.value) + 80,
                 }}

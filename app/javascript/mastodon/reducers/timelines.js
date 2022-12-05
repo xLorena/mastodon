@@ -31,24 +31,29 @@ const initialTimeline = ImmutableMap({
   items: ImmutableList(),
 });
 
-const sortAlternative = (statuses) => {
-  const statusesArray = statuses.sort((a, b) => a.get('polarization_score') - b.get('polarization_score')).toArray();
+const sortDiverse = (statuses) => {
+  //sort statuses according to their polarization_score
+  const statusesArray = statuses.sort(
+    (a, b) => a.get('polarization_score') - b.get('polarization_score'))
+    .toArray();
+  
   const newStatuses = [];
   const n = statuses.size;
+  //set two variables for loop,
+  //i starting at the beginning and j at the end of the array
   var i = 0;
   var j = n - 1;
+  //loop as long as i is smaller than j (until they meet in the middle)
   while (i < j){
+    //add the biggest and smallest entry to the new array
+    // and increase i and decrease j afterwards
     newStatuses.push(statusesArray[j--]);
     newStatuses.push(statusesArray[i++]);
   }
-
-  // If the total element in array is odd
-  // then print the last middle element.
+  // if size of statuses is odd add the element in the middle
   if (n % 2 !== 0) newStatuses.push(statusesArray[i]);
 
-  const oMap = fromJS(newStatuses);
-
-  return oMap;
+  return fromJS(newStatuses);
 };
 
 const expandNormalizedTimeline = (
@@ -77,9 +82,7 @@ const expandNormalizedTimeline = (
         //Sort elements according to polarization_score
         mMap.set(
           'items',
-          // statuses
-          //   .sort((a, b) => a.get('polarization_score') - b.get('polarization_score'))
-          sortAlternative(statuses).map((status) => status.get('id')),
+          sortDiverse(statuses).map((status) => status.get('id')),
         );
       } else if (timeline === 'personalized') {
         //Only show items that have a sentiment_score that is included in the topicArray
