@@ -140,21 +140,21 @@ class BubbleList extends React.PureComponent {
         <p className='headline'>In deinem benutzerdefinierten Newsfeed erscheinen Inhalte, die ähnlich zu den Inhalten sind, die du bereits geliket hast. Entscheide per Mausklick welche Themen zusätzlich angezeigt oder rausgefiltert werden sollen. Alle Themen innerhalb der Blase werden angezeigt.</p>
         <div className='wrapper'>
           {/* loop through every sentiment class */}
-          {updateSentimentObj().map((status) =>
+          {updateSentimentObj().map((sentimentclass) =>
           /* don't render it on the outside of the bubble when it's in the favorite list
            or in the insideBubble array */
-            status.value !== 0 || insideBubble.includes(status.key) ? (
+           sentimentclass.value !== 0 || insideBubble.includes(sentimentclass.key) ? (
               <></>
             ) : (
               <div
                 key={status.key}
                 // on click add to insideBubble array
-                onClick={() => this.onBubbleClickOutside(status.key)}
+                onClick={() => this.onBubbleClickOutside(sentimentclass.key)}
                 className='outside-bubble not-favorites'
               >
                 <p className='bubble-text'>
                   {/* map sentiment score to the according sentiment word */}
-                  {sentimentMap(status.key)}
+                  {sentimentMap(sentimentclass.key)}
                 </p>
               </div>
             ),
@@ -179,21 +179,21 @@ class BubbleList extends React.PureComponent {
         <div className='big-bubble'>
           {/* render inside the bubble: 
           all entries of favorites that are not in the outsideBubble array */}
-          {updateSentimentObj().map((status) =>
-            status.value !== 0 && !outsideBubble.includes(status.key) ? (
+          {updateSentimentObj().map((sentimentclass) =>
+            sentimentclass.value !== 0 && !outsideBubble.includes(sentimentclass.key) ? (
               <div
                 // on click add to outsideBubble array
-                onClick={() => this.onBubbleClickInside(status.key)}
-                key={status.key}
+                onClick={() => this.onBubbleClickInside(sentimentclass.key)}
+                key={sentimentclass.key}
                 className='inside-bubble favorites'
                 style={{
                   // calculate size according to amount of entries in favorites
-                  width: 50 * calculateSize(status.value) + 80,
-                  height: 50 * calculateSize(status.value) + 80,
+                  width: 50 * calculateSize(sentimentclass.value) + 80,
+                  height: 50 * calculateSize(sentimentclass.value) + 80,
                 }}
               >
                 <p className='bubble-text'>
-                  {sentimentMap(status.key)}
+                  {sentimentMap(sentimentclass.key)}
                 </p>
               </div>
             ) : (

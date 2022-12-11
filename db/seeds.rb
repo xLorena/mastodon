@@ -19,13 +19,17 @@ if Rails.env.development?
   you.save(validate: false)
   youId = you.id
   User.where(email: "du@#{domain}").first_or_initialize(
-    email: "du@#{domain}", password: 'mastodondu', 
+    email: "du@#{domain}", 
+    password: 'mastodondu', 
     password_confirmation: 'mastodondu', 
-    confirmed_at: Time.now.utc, account: du, agreement: true, approved: true
+    confirmed_at: Time.now.utc,
+    account: you, 
+    agreement: true, 
+    approved: true
     ).save!
 
-  #read file in datasets/covid/test4.0.csv
-  csv_text = File.read(Rails.root.join('datasets', 'covid', 'test4.0.csv'))
+  #read file in datasets/covid/test.csv
+  csv_text = File.read(Rails.root.join('datasets', 'covid', 'test.csv'))
   #parse file into object
   csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 

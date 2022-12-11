@@ -8,7 +8,6 @@ import ColumnHeader from '../../components/column_header';
 import { expandCommunityTimeline, expandDiverseSortedTimeline, expandPersonalizedTimeline, expandNewnessTimeline } from '../../actions/timelines';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
-import { connectCommunityStream } from '../../actions/streaming';
 import { fetchFavouritedStatuses } from '../../actions/favourites';
 
 const messages = defineMessages({
